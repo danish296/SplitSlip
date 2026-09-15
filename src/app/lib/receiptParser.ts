@@ -89,48 +89,40 @@ export function parseReceiptText(text: string): ParsedReceipt {
   let pendingItemName = "";
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+    let line = lines[i];
     const lower = line.toLowerCase();
 
-    // Check city again if still not found
+    // Check city if still not found
     if (!city) {
       const pinMatch = line.match(/([A-Za-z\s]+)[-\s](\d{6})/);
       if (pinMatch) city = pinMatch[1].trim();
     }
 
-    // Skip footer / noise
-    if (/thanks|visit again|powered by|feedback|payment|cashier/i.test(lower)) continue;
-    if (/ph\.?\s*no|gstin|invoice\s*num|invoice\s*date/i.test(lower)) continue;
+    // Skip non-item header/footer metadata lines
+    if (/thanks|visit again|powered by|feedback|payment|cashier|welcome|order no|order #|token|waiter|table|st\.?|server/i.test(lower)) continue;
+    if (/ph\.?\s*no|gstin|fssai|cin|tin|invoice\s*num|invoice\s*date|date\s*:|time\s*:/i.test(lower)) continue;
 
-    // Detect start of items table (e.g. "Item Qty Rate Total")
-    if (/\b(?:item|qty|rate|total|price)\b/i.test(line) && line.split(/\s+/).length >= 3) {
+    // Detect start of items table (e.g. "Item Qty Rate Total", "Particulars Amount")
+    if (/\b(?:item|qty|rate|total|price|particulars|desc|description|amt|amount)\b/i.test(line) && line.split(/\s+/).length >= 2) {
       itemSectionStarted = true;
       continue;
     }
 
-    // Skip initial header lines before items table
-    if (!itemSectionStarted) {
-      if (i < 8 && !/tandoori|chicken|biryani|paneer|roti|dal|curry|veg|fried|naan|burger|pizza/i.test(lower)) {
-        continue;
-      }
-      itemSectionStarted = true;
-    }
-
-    // Check Subtotal (fuzzy: Sub Totel, Sub Total, etc.)
-    if (/sub\s*tot[ea]l/i.test(lower)) {
+    // Check Subtotal (fuzzy: Sub Totel, Sub Total, Net Total)
+    if (/sub\s*tot[ea]l|net\s*amt|net\s*amount/i.test(lower)) {
       const match = line.match(/([\d,]+(?:\.\d{1,2})?)\s*$/);
       if (match) subtotalMinor = parseAmount(match[1]) || 0;
       continue;
     }
 
-    // Check Total
-    if (/(?:^|\s)tot[ea]l:?/i.test(lower) && !/qty/i.test(lower)) {
+    // Check Total / Grand Total
+    if (/(?:^|\s)(?:grand\s*)?tot[ea]l|amount\s*payable|balance\s*due/i.test(lower) && !/qty/i.test(lower)) {
       const match = line.match(/([\d,]+(?:\.\d{1,2})?)\s*$/);
       if (match) totalMinor = parseAmount(match[1]) || 0;
       continue;
     }
 
-    // Check Taxes (CGST, SGST, IGST, GST, cesT, vat, tax)
+    // Check Taxes (CGST, SGST, IGST, GST, VAT, TAX)
     if (/(?:c[e|g]st|s?gst|vat|tax)/i.test(lower) && !/s\.?\s*tax/i.test(lower)) {
       const match = line.match(/([\d,]+(?:\.\d{1,2})?)\s*$/);
       if (match) taxMinor += parseAmount(match[1]) || 0;
@@ -144,49 +136,68 @@ export function parseReceiptText(text: string): ParsedReceipt {
       continue;
     }
 
-    if (/total\s*qty/i.test(lower)) continue;
+    if (/total\s*qty|round\s*off/i.test(lower)) continue;
 
-    // Extract item lines with numbers
-    const numberTokens = line.match(/[\d,]+(?:\.\d{2})?/g);
-    if (numberTokens && numberTokens.length > 0) {
-      let combinedName = pendingItemName ? `${pendingItemName} ` : "";
-      pendingItemName = "";
-
-      const firstNumIndex = line.search(/[\d,]+(?:\.\d{2})?/);
-      const namePart = line.substring(0, firstNumIndex).trim();
-      combinedName += namePart;
-
-      const lastToken = numberTokens[numberTokens.length - 1];
-      const amountMinor = parseAmount(lastToken);
-
-      let quantity = 1;
-      if (numberTokens.length >= 2) {
-        const firstNum = parseInt(numberTokens[0], 10);
-        if (firstNum > 0 && firstNum <= 20) {
-          quantity = firstNum;
-        }
+    // --- Universal Item & Price Extraction ---
+    // Look for price at the end of the line (e.g. "120.00", "1,450.50", "250", "309.75")
+    const endPriceMatch = line.match(/(?:₹|Rs\.?|INR)?\s*([\d,]+(?:\.\d{1,2})?)\s*$/i);
+    if (!endPriceMatch) {
+      // Multi-line continuation (e.g. "Paneer Makhani" on line 1, price on line 2)
+      if (line.length >= 3 && !/^\d+$/.test(line) && !/item|qty|rate|total/i.test(line)) {
+        pendingItemName = line.replace(/^[^\w]+|[^\w]+$/g, "").trim();
       }
+      continue;
+    }
 
-      // Clean up item name (remove OCR artifacts)
-      combinedName = combinedName
-        .replace(/\b(?:firs|all food less spicy|less spicy)\b/gi, "")
-        .replace(/^[^\w]+|[^\w]+$/g, "")
-        .replace(/\s{2,}/g, " ")
-        .trim();
+    const priceToken = endPriceMatch[1];
+    const amountMinor = parseAmount(priceToken);
+    if (!amountMinor || amountMinor <= 0) continue;
 
-      if (combinedName.length >= 2 && amountMinor && amountMinor > 0) {
-        items.push({
-          id: uid("bi"),
-          name: combinedName,
-          quantity,
-          amountMinor,
-        });
+    // Get the line content before the ending price
+    let textBeforePrice = line.slice(0, endPriceMatch.index).trim();
+
+    // If there is a pending item name from the previous line, prepend it
+    let combinedName = pendingItemName ? `${pendingItemName} ` : "";
+    pendingItemName = "";
+
+    // Extract optional leading serial number or quantity (e.g. "1. ", "01 ", "2x ", "1 - ")
+    let quantity = 1;
+    const leadingIndexMatch = textBeforePrice.match(/^(\d{1,2})[\.\s\-x:]+\s*(.*)$/);
+    if (leadingIndexMatch) {
+      const leadNum = parseInt(leadingIndexMatch[1], 10);
+      if (leadNum > 0 && leadNum <= 20) {
+        quantity = leadNum;
       }
-    } else {
-      // Multi-line continuation (e.g. "HYDERABADI MURG" followed by "BIRYANI...")
-      if (!/item|qty|rate|total/i.test(line)) {
-        pendingItemName = line;
+      textBeforePrice = leadingIndexMatch[2].trim();
+    }
+
+    // Check if there is another number right before the price (e.g. "Item Name [Qty] [Rate] [Price]" or "[Name] [Qty] [Price]")
+    const trailingNumMatch = textBeforePrice.match(/\b(\d{1,2})\s*(?:x\s*[\d.]+\s*)?$/i);
+    if (trailingNumMatch) {
+      const midQty = parseInt(trailingNumMatch[1], 10);
+      if (midQty > 0 && midQty <= 20) {
+        quantity = midQty;
       }
+      textBeforePrice = textBeforePrice.slice(0, trailingNumMatch.index).trim();
+    }
+
+    combinedName += textBeforePrice;
+
+    // Clean OCR artifacts and punctuation from item name
+    combinedName = combinedName
+      .replace(/[|~_{}*#]+/g, "")
+      .replace(/^[^\w]+|[^\w]+$/g, "")
+      .replace(/\s{2,}/g, " ")
+      .trim();
+
+    // Valid item found!
+    if (combinedName.length >= 2 && !/^(?:total|subtotal|tax|discount|cash|card|upi|change)$/i.test(combinedName)) {
+      items.push({
+        id: uid("bi"),
+        name: combinedName,
+        quantity,
+        amountMinor,
+      });
     }
   }
 

@@ -152,14 +152,14 @@ export default function Scanner() {
     if (Capacitor.isNativePlatform()) {
       try {
         const photo = await CapCamera.getPhoto({
-          quality: 100,
+          quality: 90,
           allowEditing: false,
-          resultType: CameraResultType.Uri,
+          resultType: CameraResultType.DataUrl,
           source: CameraSource.Camera,
         });
-        if (photo.webPath) {
-          setPreviewUrl(photo.webPath);
-          void handleProcessImage(photo.webPath);
+        if (photo.dataUrl) {
+          setPreviewUrl(photo.dataUrl);
+          void handleProcessImage(photo.dataUrl);
           return;
         }
       } catch (err: any) {
@@ -207,14 +207,14 @@ export default function Scanner() {
     if (Capacitor.isNativePlatform()) {
       try {
         const photo = await CapCamera.getPhoto({
-          quality: 100,
+          quality: 90,
           allowEditing: false,
-          resultType: CameraResultType.Uri,
+          resultType: CameraResultType.DataUrl,
           source: CameraSource.Photos,
         });
-        if (photo.webPath) {
-          setPreviewUrl(photo.webPath);
-          void handleProcessImage(photo.webPath);
+        if (photo.dataUrl) {
+          setPreviewUrl(photo.dataUrl);
+          void handleProcessImage(photo.dataUrl);
           return;
         }
       } catch (err: any) {
