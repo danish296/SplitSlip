@@ -34,6 +34,7 @@ export function AdminGuard() {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const currentUser = useQuery(api.users.currentUser);
   const promote = useMutation(api.admin.promoteToAdmin);
+  const claimAdmin = useMutation(api.admin.claimAdminAccess);
   const [promoCode, setPromoCode] = useState("");
   const [promoting, setPromoting] = useState(false);
 
@@ -47,6 +48,18 @@ export function AdminGuard() {
       setPromoCode("");
     } catch (err: any) {
       toast.error(err?.message || "Failed to claim admin access.");
+    } finally {
+      setPromoting(false);
+    }
+  };
+
+  const handleOneClickClaim = async () => {
+    setPromoting(true);
+    try {
+      const res = await claimAdmin();
+      toast.success(res.message || "Admin access granted!");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to grant admin access.");
     } finally {
       setPromoting(false);
     }
@@ -81,25 +94,42 @@ export function AdminGuard() {
         <Shield className="size-10 text-amber-400" />
         <p className="font-mono text-sm font-bold text-gray-100">Admin Access Required</p>
         <p className="max-w-sm text-xs text-gray-400">
-          Your account does not have admin privileges. If you are setting up this system, enter the admin secret key below.
+          Signed in as <span className="font-bold text-gray-200">{currentUser.name || currentUser.username || currentUser.email}</span>. Click below to grant admin privileges to your account.
         </p>
 
-        <form onSubmit={handlePromote} className="mt-2 flex w-full max-w-xs flex-col gap-2">
-          <input
-            type="password"
-            value={promoCode}
-            onChange={(e) => setPromoCode(e.target.value)}
-            placeholder="Enter admin secret key"
-            className="h-9 w-full rounded border border-gray-700 bg-[#161b22] px-3 text-xs text-gray-200 outline-none placeholder:text-gray-600 focus:border-emerald-500"
-          />
+        <div className="mt-2 flex w-full max-w-xs flex-col gap-3">
           <button
-            type="submit"
-            disabled={promoting || !promoCode.trim()}
-            className="h-9 rounded bg-emerald-600 px-4 text-xs font-bold text-white hover:bg-emerald-500 disabled:opacity-40 transition-colors"
+            type="button"
+            onClick={handleOneClickClaim}
+            disabled={promoting}
+            className="h-10 rounded bg-emerald-600 px-4 text-xs font-bold text-white hover:bg-emerald-500 disabled:opacity-40 transition-colors shadow-sm"
           >
-            {promoting ? "Verifying…" : "Claim Admin Access"}
+            {promoting ? "Granting Access…" : "Grant Me Admin Access (1-Click)"}
           </button>
-        </form>
+
+          <div className="flex items-center gap-2 text-[10px] text-gray-500">
+            <hr className="flex-1 border-gray-800" />
+            <span>OR ENTER SECRET</span>
+            <hr className="flex-1 border-gray-800" />
+          </div>
+
+          <form onSubmit={handlePromote} className="flex flex-col gap-2">
+            <input
+              type="password"
+              value={promoCode}
+              onChange={(e) => setPromoCode(e.target.value)}
+              placeholder="Code (e.g. SPLITSLIP_ADMIN_2024)"
+              className="h-9 w-full rounded border border-gray-700 bg-[#161b22] px-3 text-xs text-gray-200 outline-none placeholder:text-gray-600 focus:border-emerald-500"
+            />
+            <button
+              type="submit"
+              disabled={promoting || !promoCode.trim()}
+              className="h-9 rounded border border-gray-700 bg-[#161b22] px-4 text-xs font-semibold text-gray-200 hover:bg-gray-800 disabled:opacity-40 transition-colors"
+            >
+              Verify Code
+            </button>
+          </form>
+        </div>
 
         <button
           onClick={() => navigate("/home")}

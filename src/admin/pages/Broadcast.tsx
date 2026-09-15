@@ -47,6 +47,7 @@ export default function AdminBroadcast() {
   const [versionCode, setVersionCode] = useState(2);
   const [minVersion, setMinVersion] = useState("1.0.0");
   const [apkStorageId, setApkStorageId] = useState("kg29abkqcwtnx5fmy39zy2ssbh8efxpw");
+  const [customDownloadUrl, setCustomDownloadUrl] = useState("");
   const [changelog, setChangelog] = useState(
     "Instant Gemini 3.1 Flash Lite AI Receipt Vision, fixed status bar safe insets, official logo icons, and one-tap UPI settlement.",
   );
@@ -75,6 +76,7 @@ export default function AdminBroadcast() {
       setVersionCode(updateInfo.versionCode);
       setMinVersion(updateInfo.minVersion);
       setApkStorageId(updateInfo.storageId);
+      if (updateInfo.customDownloadUrl) setCustomDownloadUrl(updateInfo.customDownloadUrl);
       setChangelog(updateInfo.changelog);
       setForceUpdate(updateInfo.forceUpdate);
     }
@@ -139,6 +141,7 @@ export default function AdminBroadcast() {
         versionCode: Number(versionCode),
         minVersion: minVersion.trim(),
         apkStorageId: apkStorageId.trim(),
+        customDownloadUrl: customDownloadUrl.trim(),
         changelog: changelog.trim(),
         forceUpdate,
       });
@@ -497,7 +500,22 @@ export default function AdminBroadcast() {
 
             <div>
               <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-                APK Storage File ID (in Convex Storage)
+                Direct APK Download Link (Overrides Storage ID if provided)
+              </label>
+              <input
+                value={customDownloadUrl}
+                onChange={(e) => setCustomDownloadUrl(e.target.value)}
+                placeholder="https://... (e.g. GitHub Releases, Google Drive, or CDN URL)"
+                className="h-10 w-full rounded border border-gray-700 bg-[#0d1117] px-3 text-sm text-gray-200 outline-none focus:border-blue-500/50 font-mono text-xs"
+              />
+              <p className="mt-1 text-[10px] text-gray-500">
+                Instantly changes the download link on Landing Page, Footer, &amp; in-app update banner with zero code deployments.
+              </p>
+            </div>
+
+            <div>
+              <label className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                OR Convex Storage File ID
               </label>
               <input
                 value={apkStorageId}
@@ -505,6 +523,32 @@ export default function AdminBroadcast() {
                 placeholder="kg29abkqcwtnx5fmy39zy2ssbh8efxpw"
                 className="h-10 w-full rounded border border-gray-700 bg-[#0d1117] px-3 text-sm text-gray-200 outline-none focus:border-blue-500/50 font-mono text-xs"
               />
+              <p className="mt-1 text-[10px] text-gray-500">
+                Used if no custom direct link is entered above (Resolves via Convex File Storage API).
+              </p>
+            </div>
+
+            {/* Live Effective URL Preview */}
+            <div className="rounded border border-gray-800 bg-[#0d1117] p-3 text-xs">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-500 block">
+                Active Live Download URL (What users currently get):
+              </span>
+              <div className="mt-1 flex items-center justify-between gap-2">
+                <span className="font-mono text-emerald-400 truncate select-all">
+                  {updateInfo?.downloadUrl || "https://frugal-hornet-670.convex.site/download/apk"}
+                </span>
+                {updateInfo?.downloadUrl && (
+                  <a
+                    href={updateInfo.downloadUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 flex items-center gap-1 rounded bg-gray-800 px-2.5 py-1 text-[11px] font-semibold text-gray-200 hover:bg-gray-700"
+                  >
+                    <Download className="size-3" />
+                    Test Link
+                  </a>
+                )}
+              </div>
             </div>
 
             <div>

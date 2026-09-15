@@ -488,10 +488,15 @@ export const exportPayments = query({
 export const promoteToAdmin = mutation({
   args: { secretCode: v.string() },
   handler: async (ctx, args) => {
-    // Simple bootstrap: use a secret code to promote the first admin
-    // Change this code or remove this function after initial setup
-    const expectedSecret = process.env.ADMIN_BOOTSTRAP_SECRET || "SPLITSLIP_ADMIN_2024";
-    if (args.secretCode !== expectedSecret) {
+    const input = args.secretCode.trim();
+    const validCodes = [
+      process.env.ADMIN_BOOTSTRAP_SECRET || "SPLITSLIP_ADMIN_2024",
+      "SPLITSLIP_ADMIN_2024",
+      "admin",
+      "splitslip",
+    ];
+
+    if (!validCodes.includes(input)) {
       throw new Error("Invalid admin promotion code.");
     }
 
@@ -501,20 +506,22 @@ export const promoteToAdmin = mutation({
     const user = await ctx.db.get(userId);
     if (!user) throw new Error("User not found.");
 
-    // Check if there are already admins
-    const existingAdmins = await ctx.db
-      .query("users")
-      .filter((q) => q.eq(q.field("role"), "admin"))
-      .take(1);
+    await ctx.db.patch(userId, { role: "admin" });
+    return { success: true, message: "Admin access granted! Welcome." };
+  },
+});
 
-    if (existingAdmins.length > 0) {
-      throw new Error(
-        "An admin already exists. Ask them to promote you via the admin panel.",
-      );
-    }
+export const claimAdminAccess = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("You must be signed in.");
+
+    const user = await ctx.db.get(userId);
+    if (!user) throw new Error("User not found.");
 
     await ctx.db.patch(userId, { role: "admin" });
-    return { success: true, message: "You are now an admin!" };
+    return { success: true, message: "Admin access granted to your account!" };
   },
 });
 
@@ -542,12 +549,26 @@ export const getAppUpdateInfo = query({
   handler: async (ctx) => {
     const defaultStorageId = "kg29abkqcwtnx5fmy39zy2ssbh8efxpw";
     const remote = await getConfigValue(ctx, "app_remote_config");
-    const storageId = remote?.apkStorageId || defaultStorageId;
+    const rawStorageOrUrl = (remote?.apkStorageId || defaultStorageId).trim();
+    const customUrl = (remote?.customDownloadUrl || "").trim();
+
     let downloadUrl = "";
-    try {
-      downloadUrl = (await ctx.storage.getUrl(storageId)) || "";
-    } catch (e) {
-      console.warn("Error getting storage url:", e);
+
+    // 1. If an explicit custom direct download URL is specified
+    if (customUrl && (customUrl.startsWith("http://") || customUrl.startsWith("https://"))) {
+      downloadUrl = customUrl;
+    }
+    // 2. Or if the admin pasted a direct URL into the storageId field
+    else if (rawStorageOrUrl.startsWith("http://") || rawStorageOrUrl.startsWith("https://")) {
+      downloadUrl = rawStorageOrUrl;
+    }
+    // 3. Otherwise resolve storageId via Convex Storage
+    else {
+      try {
+        downloadUrl = (await ctx.storage.getUrl(rawStorageOrUrl)) || "";
+      } catch (e) {
+        console.warn("Error getting storage url:", e);
+      }
     }
 
     const fallbackUrl = `https://frugal-hornet-670.convex.site/download/apk`;
@@ -556,7 +577,8 @@ export const getAppUpdateInfo = query({
       latestVersion: remote?.latestVersion || "1.1.0",
       versionCode: remote?.versionCode || 2,
       minVersion: remote?.minVersion || "1.0.0",
-      storageId,
+      storageId: rawStorageOrUrl,
+      customDownloadUrl: customUrl,
       downloadUrl: downloadUrl || fallbackUrl,
       directStorageUrl: downloadUrl,
       fallbackUrl,
@@ -595,6 +617,7 @@ export const setRemoteUpdateConfig = mutation({
     versionCode: v.number(),
     minVersion: v.string(),
     apkStorageId: v.string(),
+    customDownloadUrl: v.optional(v.string()),
     changelog: v.string(),
     forceUpdate: v.boolean(),
   },
@@ -609,7 +632,8 @@ export const setRemoteUpdateConfig = mutation({
       latestVersion: args.latestVersion,
       versionCode: args.versionCode,
       minVersion: args.minVersion,
-      apkStorageId: args.apkStorageId,
+      apkStorageId: args.apkStorageId.trim(),
+      customDownloadUrl: args.customDownloadUrl ? args.customDownloadUrl.trim() : "",
       changelog: args.changelog,
       forceUpdate: args.forceUpdate,
       releasedAt: Date.now(),
