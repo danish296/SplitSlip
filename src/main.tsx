@@ -13,6 +13,7 @@ import {
   useNavigate,
 } from "react-router";
 import { App as CapApp } from "@capacitor/app";
+import { StatusBar, Style } from "@capacitor/status-bar";
 import { Capacitor } from "@capacitor/core";
 import { AppStoreProvider, SplashGate } from "@/app/store/AppContext";
 import "./index.css";
@@ -144,16 +145,64 @@ function RouteSyncer() {
   return null;
 }
 
-/** On native (Capacitor), skip the landing page and go straight to auth/onboarding. */
+/** On native (Capacitor), manage native lifecycle, restored results, and route restoration */
 function NativeLandingRedirect() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (Capacitor.isNativePlatform() && pathname === "/") {
+    if (!Capacitor.isNativePlatform()) return;
+
+    // Track active route
+    if (pathname !== "/" && pathname !== "/auth" && pathname !== "/onboarding") {
+      localStorage.setItem("split_last_native_route", pathname);
+    }
+
+    if (pathname === "/") {
+      const restored = sessionStorage.getItem("split_restored_camera_image");
+      if (restored) {
+        navigate("/scan", { replace: true });
+        return;
+      }
+      const lastRoute = localStorage.getItem("split_last_native_route");
+      if (lastRoute && lastRoute !== "/" && lastRoute !== "/auth" && lastRoute !== "/onboarding") {
+        navigate(lastRoute, { replace: true });
+        return;
+      }
       navigate("/auth", { replace: true });
     }
   }, [pathname, navigate]);
+
+  return null;
+}
+
+function NativeLifecycleManager() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    // Configure status bar so it never overlays or clips app content
+    void StatusBar.setOverlaysWebView({ overlay: false });
+    void StatusBar.setBackgroundColor({ color: "#F0EEE6" });
+    void StatusBar.setStyle({ style: Style.Dark });
+
+    let sub: any = null;
+    const register = async () => {
+      sub = await CapApp.addListener("appRestoredResult", (data: any) => {
+        console.log("[NativeLifecycle] appRestoredResult:", data);
+        if (data?.pluginId === "Camera" && data?.data?.dataUrl) {
+          sessionStorage.setItem("split_restored_camera_image", data.data.dataUrl);
+          navigate("/scan", { replace: true });
+        }
+      });
+    };
+    void register();
+
+    return () => {
+      if (sub && sub.remove) sub.remove();
+    };
+  }, [navigate]);
 
   return null;
 }
@@ -249,6 +298,7 @@ createRoot(document.getElementById("root")!).render(
       </ToolbarErrorBoundary>
       <ConvexAuthProvider client={convex}>
         <BrowserRouter>
+          <NativeLifecycleManager />
           <AndroidBackHandler />
           <NativeLandingRedirect />
           <RouteSyncer />

@@ -63,13 +63,16 @@ export default function Home() {
 
   return (
     <div className="paper-grain flex min-h-[100dvh] flex-col bg-background text-ink">
-      <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-1 flex-col px-5 pb-24 pt-5 sm:border-x sm:border-ink sm:shadow-paper-lg bg-background">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-1 flex-col px-5 pb-24 sm:border-x sm:border-ink sm:shadow-paper-lg bg-background">
         {!booted ? (
           <HomeSkeleton />
         ) : (
           <>
             {/* ---- Header: Logo + Greeting + Navigation Actions ---- */}
-            <header className="sticky top-0 z-20 -mx-5 -mt-5 mb-3 flex items-center justify-between border-b border-ink bg-background/95 px-5 py-3.5 backdrop-blur-sm shadow-xs">
+            <header
+              className="sticky top-0 z-20 -mx-5 mb-3 flex items-center justify-between border-b border-ink bg-background/95 px-5 py-3.5 backdrop-blur-sm shadow-xs"
+              style={{ paddingTop: "max(0.875rem, env(safe-area-inset-top, 0px))" }}
+            >
               <div className="flex items-center gap-3">
                 <span
                   aria-hidden="true"

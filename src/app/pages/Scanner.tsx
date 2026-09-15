@@ -43,6 +43,22 @@ export default function Scanner() {
   // Initialize camera
   const initCamera = useCallback(async () => {
     try {
+      if (Capacitor.isNativePlatform()) {
+        try {
+          const perm = await CapCamera.checkPermissions();
+          if (perm.camera !== "granted") {
+            const req = await CapCamera.requestPermissions({ permissions: ["camera"] });
+            if (req.camera !== "granted") {
+              setHasCamera(false);
+              setCameraError("Camera permission denied. You can still pick a receipt from gallery.");
+              return;
+            }
+          }
+        } catch (permErr) {
+          console.warn("Permission check warning:", permErr);
+        }
+      }
+
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         setHasCamera(false);
         return;
@@ -147,27 +163,19 @@ export default function Scanner() {
     [],
   );
 
-  // Capture photo from camera (native sensor on Android, video frame on web)
-  const captureLiveCamera = useCallback(async () => {
-    if (Capacitor.isNativePlatform()) {
-      try {
-        const photo = await CapCamera.getPhoto({
-          quality: 90,
-          allowEditing: false,
-          resultType: CameraResultType.DataUrl,
-          source: CameraSource.Camera,
-        });
-        if (photo.dataUrl) {
-          setPreviewUrl(photo.dataUrl);
-          void handleProcessImage(photo.dataUrl);
-          return;
-        }
-      } catch (err: any) {
-        console.warn("Native camera cancelled/error:", err);
-        return;
-      }
+  // Check if native camera returned an image after process recreation
+  useEffect(() => {
+    const restored = sessionStorage.getItem("split_restored_camera_image");
+    if (restored) {
+      sessionStorage.removeItem("split_restored_camera_image");
+      setPreviewUrl(restored);
+      void handleProcessImage(restored);
     }
+  }, [handleProcessImage]);
 
+  // Capture photo from camera (in-app stream capture first, native fallback)
+  const captureLiveCamera = useCallback(async () => {
+    // 1. Direct in-app stream capture: Instant, 0ms, zero OS process switching, immune to Android activity death!
     if (videoRef.current && canvasRef.current && hasCamera) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
@@ -179,6 +187,26 @@ export default function Scanner() {
         const processedUrl = preprocessReceiptImage(canvas);
         setPreviewUrl(processedUrl);
         void handleProcessImage(canvas);
+        return;
+      }
+    }
+
+    // 2. If no in-app stream is active, use native camera plugin with low-memory safety
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const photo = await CapCamera.getPhoto({
+          quality: 80,
+          allowEditing: false,
+          resultType: CameraResultType.DataUrl,
+          source: CameraSource.Camera,
+        });
+        if (photo.dataUrl) {
+          setPreviewUrl(photo.dataUrl);
+          void handleProcessImage(photo.dataUrl);
+          return;
+        }
+      } catch (err: any) {
+        console.warn("Native camera cancelled/error:", err);
         return;
       }
     }
@@ -295,7 +323,10 @@ export default function Scanner() {
       <canvas ref={canvasRef} className="hidden" />
 
       <div className="mx-auto flex min-h-screen w-full max-w-md flex-1 flex-col border-x border-ink/40 sm:border-ink shadow-paper-lg bg-background">
-        <header className="sticky top-0 z-20 flex items-center justify-between gap-2.5 border-b border-ink bg-background/95 px-4 py-3 backdrop-blur-sm shadow-xs">
+        <header
+          className="sticky top-0 z-20 flex items-center justify-between gap-2.5 border-b border-ink bg-background/95 px-4 py-3 backdrop-blur-sm shadow-xs"
+          style={{ paddingTop: "max(0.75rem, env(safe-area-inset-top, 0px))" }}
+        >
           <div className="flex items-center gap-2.5 min-w-0 flex-1">
             <button
               type="button"
