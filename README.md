@@ -215,24 +215,46 @@ bunx convex env set RESEND_API_KEY re_xxxxxxxx
 
 ## Android build
 
+SplitSlip uses [Capacitor](https://capacitorjs.com) to package the responsive web app into a high-performance native Android application.
+
+### Prerequisites
+- **JDK 17 or JDK 21** (Required by Android Gradle Plugin 8.13+). If using Android Studio, point `JAVA_HOME` to `C:\Program Files\Android\Android Studio\jbr`.
+- **Android SDK** with Command Line Tools and Platform-Tools installed.
+
+### Build Steps (CLI / PowerShell / Bash)
+
 ```bash
-bun run build          # build the web app into dist/
-bunx cap sync android  # copy it into the native project
-bunx cap open android  # opens Android Studio
+# 1. Compile and bundle the latest web assets
+npm run build
+
+# 2. Sync web bundle and native plugins into the Android project
+npx cap sync android
+
+# 3. Clean and build the Android debug APK
+cd android
+./gradlew clean assembleDebug
+cd ..
+
+# 4. Find the generated APK
+# Output location: android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
-Then build from Android Studio, or:
-
-```bash
-cd android && ./gradlew assembleDebug
+**Windows PowerShell 1-liner:**
+```powershell
+npm run build; npx cap sync android; cd android; $env:JAVA_HOME="C:\Program Files\Android\Android Studio\jbr"; .\gradlew.bat clean assembleDebug; cd ..; Copy-Item "android\app\build\outputs\apk\debug\app-debug.apk" -Destination "SplitSlip-v1.1.1.apk"
 ```
 
-The app targets **SDK 36**, where Android enforces edge-to-edge display. Inset
-handling therefore lives in the web layer — `index.html` sets
-`viewport-fit=cover` and the CSS uses `env(safe-area-inset-*)`.
+### Build via Android Studio
+```bash
+npx cap open android
+```
+- Wait for Gradle sync to complete.
+- Select **Build** > **Build Bundle(s) / APK(s)** > **Build APK(s)**.
 
-Release signing config and keystores are deliberately **not** in this repo; see
-[`.gitignore`](.gitignore).
+### Edge-to-edge & Safe Area Insets
+The app targets **Android SDK 36**, where Android 15+ enforces edge-to-edge display. Safe area inset handling lives in the web layer (`viewport-fit=cover` and CSS `env(safe-area-inset-top)` / `env(safe-area-inset-bottom)`).
+
+Release signing config and keystores are deliberately **not** committed to git; see [`.gitignore`](.gitignore).
 
 ---
 

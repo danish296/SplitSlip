@@ -18,8 +18,8 @@ import {
 import { cn } from "@/lib/utils";
 
 // Current installed app version
-export const CURRENT_APP_VERSION = "1.1.0";
-export const CURRENT_VERSION_CODE = 2;
+export const CURRENT_APP_VERSION = "1.1.1";
+export const CURRENT_VERSION_CODE = 3;
 
 export function RemotePopupManager() {
   const navigate = useNavigate();
