@@ -16,6 +16,7 @@ import { App as CapApp } from "@capacitor/app";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { Capacitor } from "@capacitor/core";
 import { AppStoreProvider, SplashGate } from "@/app/store/AppContext";
+import { RemotePopupManager } from "@/app/components/RemotePopupManager";
 import "./index.css";
 
 // Lazy load route components for better code splitting
@@ -298,6 +299,7 @@ createRoot(document.getElementById("root")!).render(
       </ToolbarErrorBoundary>
       <ConvexAuthProvider client={convex}>
         <BrowserRouter>
+          <RemotePopupManager />
           <NativeLifecycleManager />
           <AndroidBackHandler />
           <NativeLandingRedirect />

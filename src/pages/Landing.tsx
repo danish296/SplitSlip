@@ -1,14 +1,18 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router";
 import { motion } from "framer-motion";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import {
   ArrowRight,
   ArrowUpRight,
   BadgeCheck,
   Check,
+  Download,
   Github,
   Lock,
   ScanLine,
+  Smartphone,
   UserPlus,
   Users,
   Wallet,
@@ -286,6 +290,9 @@ const TESTIMONIALS = [
 ];
 
 export default function Landing() {
+  const updateInfo = useQuery(api.admin.getAppUpdateInfo);
+  const apkDownloadUrl = updateInfo?.downloadUrl || "https://frugal-hornet-670.convex.site/download/apk";
+
   return (
     <div className="paper-grain min-h-screen bg-background text-ink relative overflow-x-hidden">
       {/* Decorative animated flank panels for wide screens */}
@@ -304,6 +311,14 @@ export default function Landing() {
           <span className="text-sm font-bold uppercase tracking-[0.2em]">SplitSlip</span>
         </div>
         <nav aria-label="Primary" className="flex items-center gap-2">
+          <a
+            href={apkDownloadUrl}
+            className="tactile hidden h-10 items-center gap-1.5 rounded-[4px] border border-ink bg-card px-3 text-xs font-semibold uppercase tracking-[0.12em] text-ink shadow-[0_2px_0_0_var(--ink)] hover:bg-stamp/10 sm:inline-flex"
+            title="Download SplitSlip Android APK directly"
+          >
+            <Download className="size-3.5 text-stamp" />
+            <span>Android APK</span>
+          </a>
           <Link
             to="/contact"
             className="tactile hidden h-10 items-center rounded-[4px] px-3.5 text-xs font-semibold uppercase tracking-[0.15em] text-ink-soft hover:text-ink sm:inline-flex"
@@ -344,6 +359,14 @@ export default function Landing() {
               <LandingButton href="/onboarding" big>
                 New Split
               </LandingButton>
+              <a
+                href={apkDownloadUrl}
+                className="tactile inline-flex h-14 items-center justify-center gap-2 rounded-[4px] border border-ink bg-card px-6 text-sm font-bold uppercase tracking-[0.1em] text-ink shadow-[0_3px_0_0_var(--ink)] transition-all duration-100 active:translate-y-[3px] active:shadow-none hover:bg-stamp/10"
+                title="Direct Android APK download"
+              >
+                <Smartphone className="size-4 text-stamp" />
+                <span>Get Android App</span>
+              </a>
               <LandingButton href="/onboarding" variant="outline">
                 See how it works
               </LandingButton>
@@ -504,7 +527,7 @@ export default function Landing() {
             Takes under a minute to set up. Scan your first receipt and send
             your first slips tonight.
           </p>
-          <div className="mt-8">
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               to="/onboarding"
               className="tactile inline-flex h-14 items-center gap-2 rounded-[4px] border border-stamp-foreground/30 bg-card px-8 text-sm font-bold uppercase tracking-[0.12em] text-ink shadow-[0_3px_0_0_color-mix(in_srgb,var(--stamp)_60%,black)]"
@@ -512,6 +535,14 @@ export default function Landing() {
               Start Splitting
               <ArrowUpRight className="size-4" aria-hidden="true" />
             </Link>
+            <a
+              href={apkDownloadUrl}
+              className="tactile inline-flex h-14 items-center gap-2 rounded-[4px] border border-ink bg-card px-6 text-sm font-bold uppercase tracking-[0.12em] text-ink shadow-[0_3px_0_0_var(--ink)] hover:bg-card/90"
+              title="Download Android APK"
+            >
+              <Download className="size-4 text-stamp" />
+              Get Android APK
+            </a>
           </div>
         </div>
       </section>
@@ -520,11 +551,19 @@ export default function Landing() {
       <footer className="border-t border-ink bg-background">
         <div className="flex flex-col gap-4 px-5 py-8 text-xs text-ink-faint sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-receipt tracking-[0.2em] font-bold text-ink">SPLITSLIP v1</span>
+            <span className="font-receipt tracking-[0.2em] font-bold text-ink">SPLITSLIP v1.1</span>
             <span>·</span>
             <span>Scan. Split. Settle.</span>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-xs font-semibold uppercase tracking-[0.12em]">
+            <a
+              href={apkDownloadUrl}
+              className="inline-flex items-center gap-1.5 font-bold text-stamp transition-colors hover:underline"
+              title="Direct APK Download from Convex Storage"
+            >
+              <Download className="size-3.5" />
+              <span>Android APK</span>
+            </a>
             <Link
               to="/contact"
               className="text-ink-soft transition-colors hover:text-ink hover:underline"

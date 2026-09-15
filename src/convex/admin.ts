@@ -533,3 +533,153 @@ export const setAdminByUsername = mutation({
   },
 });
 
+/* ------------------------------------------------------------------ */
+/* Remote Android Update & Remote In-App Popup Management              */
+/* ------------------------------------------------------------------ */
+
+export const getAppUpdateInfo = query({
+  args: {},
+  handler: async (ctx) => {
+    const defaultStorageId = "kg29abkqcwtnx5fmy39zy2ssbh8efxpw";
+    const remote = await getConfigValue(ctx, "app_remote_config");
+    const storageId = remote?.apkStorageId || defaultStorageId;
+    let downloadUrl = "";
+    try {
+      downloadUrl = (await ctx.storage.getUrl(storageId)) || "";
+    } catch (e) {
+      console.warn("Error getting storage url:", e);
+    }
+
+    const fallbackUrl = `https://frugal-hornet-670.convex.site/download/apk`;
+
+    return {
+      latestVersion: remote?.latestVersion || "1.1.0",
+      versionCode: remote?.versionCode || 2,
+      minVersion: remote?.minVersion || "1.0.0",
+      storageId,
+      downloadUrl: downloadUrl || fallbackUrl,
+      directStorageUrl: downloadUrl,
+      fallbackUrl,
+      fileName: `SplitSlip-v${remote?.latestVersion || "1.1.0"}.apk`,
+      fileSize: remote?.fileSize || "8.6 MB",
+      changelog:
+        remote?.changelog ||
+        "Instant Gemini 3.1 Flash Lite AI Receipt Vision, fixed status bar safe insets, official logo icons, and one-tap UPI settlement.",
+      forceUpdate: !!remote?.forceUpdate,
+      releasedAt: remote?.releasedAt || Date.now(),
+    };
+  },
+});
+
+export const getRemotePopup = query({
+  args: {},
+  handler: async (ctx) => {
+    const popup = await getConfigValue(ctx, "active_remote_popup");
+    if (!popup || !popup.enabled) return null;
+    return popup;
+  },
+});
+
+export const getAdminRemotePopupConfig = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireAdmin(ctx);
+    const popup = await getConfigValue(ctx, "active_remote_popup");
+    return popup;
+  },
+});
+
+export const setRemoteUpdateConfig = mutation({
+  args: {
+    latestVersion: v.string(),
+    versionCode: v.number(),
+    minVersion: v.string(),
+    apkStorageId: v.string(),
+    changelog: v.string(),
+    forceUpdate: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+    const existing = await ctx.db
+      .query("siteConfig")
+      .withIndex("by_key", (q) => q.eq("key", "app_remote_config"))
+      .first();
+
+    const configData = {
+      latestVersion: args.latestVersion,
+      versionCode: args.versionCode,
+      minVersion: args.minVersion,
+      apkStorageId: args.apkStorageId,
+      changelog: args.changelog,
+      forceUpdate: args.forceUpdate,
+      releasedAt: Date.now(),
+    };
+
+    if (existing) {
+      await ctx.db.patch(existing._id, {
+        value: configData,
+        updatedAt: Date.now(),
+      });
+    } else {
+      await ctx.db.insert("siteConfig", {
+        key: "app_remote_config",
+        value: configData,
+        updatedAt: Date.now(),
+      });
+    }
+
+    return { success: true };
+  },
+});
+
+export const setRemotePopupConfig = mutation({
+  args: {
+    id: v.string(),
+    enabled: v.boolean(),
+    title: v.string(),
+    message: v.string(),
+    type: v.union(
+      v.literal("rating"),
+      v.literal("support"),
+      v.literal("announcement"),
+      v.literal("update"),
+    ),
+    triggerEvent: v.union(
+      v.literal("always"),
+      v.literal("bill_settled"),
+      v.literal("first_scan"),
+    ),
+    primaryActionText: v.string(),
+    primaryActionUrl: v.string(),
+    secondaryActionText: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+    const existing = await ctx.db
+      .query("siteConfig")
+      .withIndex("by_key", (q) => q.eq("key", "active_remote_popup"))
+      .first();
+
+    const popupData = {
+      ...args,
+      updatedAt: Date.now(),
+    };
+
+    if (existing) {
+      await ctx.db.patch(existing._id, {
+        value: popupData,
+        updatedAt: Date.now(),
+      });
+    } else {
+      await ctx.db.insert("siteConfig", {
+        key: "active_remote_popup",
+        value: popupData,
+        updatedAt: Date.now(),
+      });
+    }
+
+    return { success: true };
+  },
+});
+
+
