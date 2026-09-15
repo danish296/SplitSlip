@@ -30,34 +30,17 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="paper-grain flex min-h-screen flex-col bg-background">
-      <header className="mx-auto flex w-full max-w-md items-center justify-between px-5 py-4">
-        {step > 0 ? (
-          <button
-            type="button"
-            aria-label="Back"
-            onClick={() => setStep((s) => (s - 1) as Step)}
-            className="tactile flex size-9 items-center justify-center rounded-[4px] border border-ink bg-card"
-          >
-            <ChevronLeft className="size-4" />
-          </button>
-        ) : (
-          <span className="font-receipt text-[10px] uppercase tracking-[0.3em] text-ink-faint">
-            SplitSlip
-          </span>
-        )}
-        <span className="font-receipt text-[10px] tracking-[0.3em] text-ink-faint">
-          {step + 1} / 4
-        </span>
-      </header>
-
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col px-5 pb-10">
-        {step === 0 && <Intro />}
-        {step === 1 && (
-          <Question
-            title="What should we call you?"
-            hint="This is the name your friends see on payment requests."
-          >
+    <div className="paper-grain flex min-h-[100dvh] flex-col bg-background text-ink">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-1 flex-col justify-between sm:border-x sm:border-ink sm:shadow-paper-lg bg-background">
+        <main className="flex flex-1 flex-col px-5 sm:px-6 py-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.75rem,env(safe-area-inset-bottom))]">
+          {step === 0 && <Intro />}
+          {step === 1 && (
+            <Question
+              title="What should we call you?"
+              hint="This is the name your friends see on payment requests."
+              onBack={() => setStep(0)}
+              stepIndicator="1 / 3"
+            >
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -71,8 +54,10 @@ export default function Onboarding() {
         {step === 2 && (
           <Question
             title="Your phone number?"
-            hint="Mock only — this prototype never sends a real SMS."
+            hint="Used for contact matching and notifications with your friends."
             icon={<Smartphone className="size-4" aria-hidden="true" />}
+            onBack={() => setStep(1)}
+            stepIndicator="2 / 3"
           >
             <div className="flex items-center gap-2">
               <span className="flex h-14 items-center border border-ink bg-card px-3 font-receipt text-sm text-ink-soft">
@@ -95,6 +80,8 @@ export default function Onboarding() {
             title="Where should your friends pay you?"
             hint="You only need to add your own UPI ID. Your friends don't need to enter theirs."
             icon={<Wallet className="size-4" aria-hidden="true" />}
+            onBack={() => setStep(2)}
+            stepIndicator="3 / 3"
           >
             <div className="border border-ink bg-card p-4">
               <p className="font-receipt text-[10px] uppercase tracking-[0.25em] text-ink-faint">
@@ -145,6 +132,7 @@ export default function Onboarding() {
         </div>
       </main>
     </div>
+  </div>
   );
 }
 
@@ -156,6 +144,9 @@ function Intro() {
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       className="flex flex-1 flex-col items-center justify-center text-center"
     >
+      <span className="mb-6 border border-ink bg-card px-2.5 py-1 font-receipt text-[10px] font-bold uppercase tracking-[0.25em] text-ink shadow-xs">
+        SplitSlip
+      </span>
       {/* Animated receipt stack illustration */}
       <div aria-hidden="true" className="relative mb-10 flex items-end justify-center gap-3">
         {/* Background slip — faded, tilted */}
@@ -221,11 +212,15 @@ function Question({
   hint,
   children,
   icon,
+  onBack,
+  stepIndicator,
 }: {
   title: string;
   hint: string;
   children: ReactNode;
   icon?: ReactNode;
+  onBack?: () => void;
+  stepIndicator?: string;
 }) {
   return (
     <motion.div
@@ -234,11 +229,30 @@ function Question({
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       className="flex flex-1 flex-col justify-center"
     >
-      {icon && (
-        <span className="mb-3 flex size-9 items-center justify-center border border-ink bg-card text-stamp">
-          {icon}
-        </span>
-      )}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              aria-label="Back"
+              className="tactile mr-1 flex size-8 items-center justify-center rounded-[4px] border border-ink bg-card text-ink transition-transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              <ChevronLeft className="size-4" />
+            </button>
+          )}
+          {icon && (
+            <span className="flex size-8 items-center justify-center border border-ink bg-card text-stamp">
+              {icon}
+            </span>
+          )}
+        </div>
+        {stepIndicator && (
+          <span className="font-receipt text-[10px] uppercase tracking-[0.25em] text-ink-faint">
+            {stepIndicator}
+          </span>
+        )}
+      </div>
       <h1 className="text-2xl font-extrabold tracking-tight text-ink">{title}</h1>
       <p className="mt-2 text-sm leading-relaxed text-ink-soft">{hint}</p>
       <div className="mt-6">{children}</div>

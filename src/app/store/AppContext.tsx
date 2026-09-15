@@ -247,7 +247,8 @@ export function SplashGate() {
 
   return (
     <div
-      className="paper-grain fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background"
+      style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999 }}
+      className="fixed inset-0 z-[9999] flex min-h-[100dvh] h-screen w-screen flex-col items-center justify-center bg-background paper-grain"
       data-path={location.pathname}
     >
       <div className="w-56 rotate-[-1.2deg] border border-ink bg-card px-5 py-6 text-center shadow-paper-lg">

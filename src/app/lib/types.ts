@@ -17,6 +17,7 @@ export interface User {
   username?: string;
   upiId?: string;
   avatarColor?: string;
+  role?: "admin" | "user" | "member";
 }
 
 export interface Contact {

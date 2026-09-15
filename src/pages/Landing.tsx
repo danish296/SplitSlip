@@ -280,8 +280,12 @@ const TESTIMONIALS = [
 
 export default function Landing() {
   return (
-    <div className="paper-grain min-h-screen bg-background text-ink">
-      <div className="mx-auto max-w-5xl border-x border-ink/40 sm:border-ink shadow-paper-lg bg-background flex flex-col min-h-screen">
+    <div className="paper-grain min-h-screen bg-background text-ink relative overflow-x-hidden">
+      {/* Decorative animated flank panels for wide screens */}
+      <LeftFlankDecor />
+      <RightFlankDecor />
+
+      <div className="mx-auto max-w-5xl border-x border-ink/40 sm:border-ink shadow-paper-lg bg-background flex flex-col min-h-screen relative z-20">
         {/* ---------- Masthead ---------- */}
         <header className="flex items-center justify-between border-b border-ink px-5 py-4">
         <div className="flex items-center gap-2">
@@ -293,6 +297,12 @@ export default function Landing() {
           <span className="text-sm font-bold uppercase tracking-[0.2em]">SplitSlip</span>
         </div>
         <nav aria-label="Primary" className="flex items-center gap-2">
+          <Link
+            to="/contact"
+            className="tactile hidden h-10 items-center rounded-[4px] px-3.5 text-xs font-semibold uppercase tracking-[0.15em] text-ink-soft hover:text-ink sm:inline-flex"
+          >
+            Contact
+          </Link>
           <Link
             to="/onboarding"
             className="tactile hidden h-10 items-center rounded-[4px] px-4 text-xs font-semibold uppercase tracking-[0.15em] text-ink-soft hover:text-ink sm:inline-flex"
@@ -501,14 +511,118 @@ export default function Landing() {
 
       {/* ---------- Footer ---------- */}
       <footer className="border-t border-ink bg-background">
-        <div className="flex flex-col gap-3 px-5 py-8 text-xs text-ink-faint sm:flex-row sm:items-center sm:justify-between">
-          <span className="font-receipt tracking-[0.2em]">SPLITSLIP v1</span>
-          <span>
-            Scan. Split. Settle. — Built with Convex, React &amp; TypeScript.
-          </span>
+        <div className="flex flex-col gap-4 px-5 py-8 text-xs text-ink-faint sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <span className="font-receipt tracking-[0.2em] font-bold text-ink">SPLITSLIP v1</span>
+            <span>·</span>
+            <span>Scan. Split. Settle.</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-4 text-xs font-semibold uppercase tracking-[0.12em]">
+            <Link
+              to="/contact"
+              className="text-ink-soft transition-colors hover:text-ink hover:underline"
+            >
+              Contact &amp; Feedback
+            </Link>
+            <a
+              href="https://github.com/danish296/splitslip"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-ink-soft transition-colors hover:text-ink hover:underline"
+            >
+              <Github className="size-3.5" />
+              <span>GitHub</span>
+            </a>
+          </div>
         </div>
       </footer>
     </div>
   </div>
+  );
+}
+
+function LeftFlankDecor() {
+  return (
+    <aside
+      aria-hidden="true"
+      className="pointer-events-none fixed bottom-0 left-0 top-0 z-10 hidden w-[calc((100vw-64rem)/2)] max-w-[300px] select-none flex-col justify-between overflow-hidden p-6 xl:flex"
+    >
+      {/* Top: Print Registration Marks */}
+      <div className="space-y-2 text-ink-faint opacity-70">
+        <div className="flex items-center gap-2 font-receipt text-[9px] uppercase tracking-[0.25em]">
+          <span className="font-mono text-xs">+</span>
+          <span>REG 01·A / THERMAL FEED</span>
+        </div>
+        <div className="flex h-1 w-24 gap-1">
+          <span className="h-full w-4 bg-ink-line" />
+          <span className="h-full w-2 bg-ink-line" />
+          <span className="h-full w-6 bg-ink-line" />
+          <span className="h-full w-3 bg-stamp/40" />
+        </div>
+      </div>
+
+      {/* Bottom: Slowly Rotating Ink Stamp Badge */}
+      <div className="flex items-center gap-3">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{
+            repeat: Infinity,
+            duration: 40,
+            ease: "linear",
+          }}
+          className="flex size-14 items-center justify-center rounded-full border border-dashed border-stamp/60 bg-card p-1 shadow-paper"
+        >
+          <div className="flex size-11 items-center justify-center rounded-full border border-stamp/40 bg-stamp/5 font-receipt text-[7px] font-black uppercase tracking-tighter text-stamp">
+            100%·EXACT
+          </div>
+        </motion.div>
+        <div className="font-receipt text-[8px] uppercase tracking-[0.2em] text-ink-faint">
+          <p className="font-bold text-ink-soft">Thermal Ledger</p>
+          <p>58mm Direct Print</p>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function RightFlankDecor() {
+  return (
+    <aside
+      aria-hidden="true"
+      className="pointer-events-none fixed bottom-0 right-0 top-0 z-10 hidden w-[calc((100vw-64rem)/2)] max-w-[300px] select-none flex-col items-end justify-between overflow-hidden p-6 xl:flex"
+    >
+      {/* Top: Print Registration Marks */}
+      <div className="flex flex-col items-end space-y-2 text-ink-faint opacity-70">
+        <div className="flex items-center gap-2 font-receipt text-[9px] uppercase tracking-[0.25em]">
+          <span>REG 02·B / SETTLEMENT</span>
+          <span className="font-mono text-xs">+</span>
+        </div>
+        <div className="flex h-1 w-24 justify-end gap-1">
+          <span className="h-full w-3 bg-stamp/40" />
+          <span className="h-full w-6 bg-ink-line" />
+          <span className="h-full w-2 bg-ink-line" />
+          <span className="h-full w-4 bg-ink-line" />
+        </div>
+      </div>
+
+      {/* Bottom: GitHub Source Link */}
+      <a
+        href="https://github.com/danish296/splitslip"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="pointer-events-auto flex items-center gap-2.5 border border-ink bg-card px-3.5 py-2.5 font-receipt shadow-paper transition-transform hover:-translate-y-0.5 active:translate-y-0 hover:border-stamp text-ink"
+        title="View source on GitHub"
+      >
+        <Github className="size-4 text-ink shrink-0" />
+        <div className="text-left">
+          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-ink">
+            danish296/splitslip
+          </p>
+          <p className="text-[8px] tracking-[0.15em] text-ink-faint">
+            OPEN SOURCE · GITHUB
+          </p>
+        </div>
+      </a>
+    </aside>
   );
 }

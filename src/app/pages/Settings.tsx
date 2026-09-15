@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Shield } from "lucide-react";
 import { useApp } from "@/app/store/AppContext";
 import { ScreenShell } from "@/app/components/Shell";
 import { Switch } from "@/components/ui/switch";
@@ -49,6 +49,21 @@ export default function Settings() {
         <ToggleRow label="Payment requests" hint="When someone sends you a split" checked={reqNotif} onChange={setReqNotif} />
         <ToggleRow label="Settlement updates" hint="When a friend pays their share" checked={settleNotif} onChange={setSettleNotif} />
       </Section>
+
+      {user?.role === "admin" && (
+        <Section title="Administration">
+          <button
+            type="button"
+            onClick={() => navigate("/admin")}
+            className="flex w-full items-center justify-between border-b border-ink-line bg-card px-3 py-3 text-left transition-colors hover:bg-paper-warm"
+          >
+            <span className="flex items-center gap-2 text-sm font-medium text-emerald-700">
+              <Shield className="size-4" /> Admin Panel
+            </span>
+            <ChevronRight className="size-4 text-ink-faint" />
+          </button>
+        </Section>
+      )}
 
       <Section title="About">
         <div className="flex items-center justify-between border-b border-ink-line bg-card px-3 py-3">

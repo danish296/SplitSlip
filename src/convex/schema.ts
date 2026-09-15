@@ -241,6 +241,14 @@ const schema = defineSchema(
     })
       .index("by_recipient", ["recipientEmail"])
       .index("by_status", ["status"]),
+
+    // Site-wide configuration & feature flags (singleton-ish, keyed by "key")
+    siteConfig: defineTable({
+      key: v.string(),
+      value: v.any(),
+      updatedAt: v.number(),
+      updatedBy: v.optional(v.id("users")),
+    }).index("by_key", ["key"]),
   },
   {
     schemaValidation: false,

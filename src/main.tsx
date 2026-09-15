@@ -1,7 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
 import { VlyToolbar } from "../vly-toolbar-readonly.tsx";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
-import { ConvexReactClient } from "convex/react";
+import { ConvexReactClient, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import React, { StrictMode, useEffect, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import {
@@ -18,6 +19,7 @@ import "./index.css";
 
 // Lazy load route components for better code splitting
 const Landing = lazy(() => import("./pages/Landing.tsx"));
+const Contact = lazy(() => import("./pages/Contact.tsx"));
 const AuthPage = lazy(() => import("./pages/Auth.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 const Onboarding = lazy(() => import("./app/pages/Onboarding.tsx"));
@@ -39,6 +41,17 @@ const Profile = lazy(() => import("./app/pages/Profile.tsx"));
 const PublicRequest = lazy(() => import("./app/pages/PublicRequest.tsx"));
 const Friends = lazy(() => import("./app/pages/Friends.tsx"));
 const Notifications = lazy(() => import("./app/pages/Notifications.tsx"));
+
+// Admin pages
+const AdminDashboard = lazy(() => import("./admin/pages/Dashboard.tsx"));
+const AdminUsers = lazy(() => import("./admin/pages/Users.tsx"));
+const AdminBills = lazy(() => import("./admin/pages/Bills.tsx"));
+const AdminConfig = lazy(() => import("./admin/pages/Config.tsx"));
+const AdminEmails = lazy(() => import("./admin/pages/Emails.tsx"));
+const AdminExport = lazy(() => import("./admin/pages/Export.tsx"));
+const AdminBroadcast = lazy(() => import("./admin/pages/Broadcast.tsx"));
+const AdminGuard = lazy(() => import("./admin/AdminLayout.tsx").then((m) => ({ default: m.AdminGuard })));
+
 import { ProtectedRoute } from "@/app/components/ProtectedRoute";
 
 // Simple loading fallback for route transitions
@@ -131,16 +144,74 @@ function RouteSyncer() {
   return null;
 }
 
+/** On native (Capacitor), skip the landing page and go straight to auth/onboarding. */
+function NativeLandingRedirect() {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (Capacitor.isNativePlatform() && pathname === "/") {
+      navigate("/auth", { replace: true });
+    }
+  }, [pathname, navigate]);
+
+  return null;
+}
+
 /** Splash wrapper for in-app routes only — public routes render immediately. */
 function SplashRoutes() {
   const { pathname } = useLocation();
   const isPublic =
     pathname === "/" ||
+    pathname === "/contact" ||
     pathname === "/auth" ||
     pathname === "/onboarding" ||
-    pathname.startsWith("/r/");
+    pathname.startsWith("/r/") ||
+    pathname.startsWith("/admin");
   if (isPublic) return null;
   return <SplashGate />;
+}
+
+function MaintenanceGate({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation();
+  const maintenance = useQuery(api.admin.getMaintenanceStatus);
+  const currentUser = useQuery(api.users.currentUser);
+
+  // Admin routes and admins always bypass maintenance mode
+  if (pathname.startsWith("/admin") || currentUser?.role === "admin") {
+    return <>{children}</>;
+  }
+
+  if (maintenance?.active) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-paper px-6 text-center text-ink">
+        <div className="w-full max-w-sm border border-ink bg-card p-6 shadow-paper font-receipt">
+          <div className="mb-3 inline-flex size-10 items-center justify-center border border-ink bg-stamp/10 font-bold text-stamp">
+            !
+          </div>
+          <h1 className="text-base font-bold uppercase tracking-wider">Under Maintenance</h1>
+          <div className="my-3 rule-dashed" />
+          <p className="text-xs leading-relaxed text-ink-soft">
+            {maintenance.message || "SplitSlip is temporarily offline for maintenance. We'll be back shortly."}
+          </p>
+          <div className="my-3 rule-dashed" />
+          <p className="text-[10px] uppercase tracking-widest text-ink-faint">
+            Please check back soon
+          </p>
+          <div className="mt-4">
+            <a
+              href="/admin"
+              className="font-mono text-[11px] text-ink-faint hover:text-ink underline"
+            >
+              Admin Portal →
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
 }
 
 function AndroidBackHandler() {
@@ -179,37 +250,51 @@ createRoot(document.getElementById("root")!).render(
       <ConvexAuthProvider client={convex}>
         <BrowserRouter>
           <AndroidBackHandler />
+          <NativeLandingRedirect />
           <RouteSyncer />
           <AppStoreProvider>
-            <Suspense fallback={<RouteLoading />}>
-              <Routes>
-                <Route path="/" element={<Landing />} />
-                <Route
-                  path="/auth"
-                  element={<AuthPage redirectAfterAuth="/home" />}
-                />
-                <Route path="/onboarding" element={<AuthPage redirectAfterAuth="/home" />} />
-                <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-                <Route path="/scan" element={<ProtectedRoute><Scanner /></ProtectedRoute>} />
-                <Route path="/review" element={<ProtectedRoute><ReceiptReview /></ProtectedRoute>} />
-                <Route path="/split" element={<ProtectedRoute><SplitMethod /></ProtectedRoute>} />
-                <Route path="/split/equal" element={<ProtectedRoute><EqualSplit /></ProtectedRoute>} />
-                <Route path="/split/items" element={<ProtectedRoute><ItemSplit /></ProtectedRoute>} />
-                <Route path="/split/custom" element={<ProtectedRoute><CustomSplit /></ProtectedRoute>} />
-                <Route path="/people" element={<ProtectedRoute><SelectContacts /></ProtectedRoute>} />
-                <Route path="/friends" element={<ProtectedRoute><Friends /></ProtectedRoute>} />
-                <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-                <Route path="/review-request" element={<ProtectedRoute><ReviewRequest /></ProtectedRoute>} />
-                <Route path="/sending" element={<ProtectedRoute><Sending /></ProtectedRoute>} />
-                <Route path="/sent" element={<ProtectedRoute><Sent /></ProtectedRoute>} />
-                <Route path="/bills/:billId" element={<ProtectedRoute><BillDetails /></ProtectedRoute>} />
-                <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
-                <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                <Route path="/r/:requestId" element={<PublicRequest />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
+            <MaintenanceGate>
+              <Suspense fallback={<RouteLoading />}>
+                <Routes>
+                  <Route path="/" element={<Landing />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route
+                    path="/auth"
+                    element={<AuthPage redirectAfterAuth="/home" />}
+                  />
+                  <Route path="/onboarding" element={<AuthPage redirectAfterAuth="/home" />} />
+                  <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+                  <Route path="/scan" element={<ProtectedRoute><Scanner /></ProtectedRoute>} />
+                  <Route path="/review" element={<ProtectedRoute><ReceiptReview /></ProtectedRoute>} />
+                  <Route path="/split" element={<ProtectedRoute><SplitMethod /></ProtectedRoute>} />
+                  <Route path="/split/equal" element={<ProtectedRoute><EqualSplit /></ProtectedRoute>} />
+                  <Route path="/split/items" element={<ProtectedRoute><ItemSplit /></ProtectedRoute>} />
+                  <Route path="/split/custom" element={<ProtectedRoute><CustomSplit /></ProtectedRoute>} />
+                  <Route path="/people" element={<ProtectedRoute><SelectContacts /></ProtectedRoute>} />
+                  <Route path="/friends" element={<ProtectedRoute><Friends /></ProtectedRoute>} />
+                  <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+                  <Route path="/review-request" element={<ProtectedRoute><ReviewRequest /></ProtectedRoute>} />
+                  <Route path="/sending" element={<ProtectedRoute><Sending /></ProtectedRoute>} />
+                  <Route path="/sent" element={<ProtectedRoute><Sent /></ProtectedRoute>} />
+                  <Route path="/bills/:billId" element={<ProtectedRoute><BillDetails /></ProtectedRoute>} />
+                  <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+                  <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                  <Route path="/r/:requestId" element={<PublicRequest />} />
+                  {/* Admin routes — protected by AdminGuard (prevents queries from running for non-admins) */}
+                  <Route element={<AdminGuard />}>
+                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/admin/users" element={<AdminUsers />} />
+                    <Route path="/admin/bills" element={<AdminBills />} />
+                    <Route path="/admin/config" element={<AdminConfig />} />
+                    <Route path="/admin/emails" element={<AdminEmails />} />
+                    <Route path="/admin/export" element={<AdminExport />} />
+                    <Route path="/admin/broadcast" element={<AdminBroadcast />} />
+                  </Route>
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </MaintenanceGate>
             <SplashRoutes />
           </AppStoreProvider>
         </BrowserRouter>

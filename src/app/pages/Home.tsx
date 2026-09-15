@@ -11,6 +11,7 @@ import {
   EmptyState,
   TactileButton,
 } from "@/app/components/paper";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { Bill } from "@/app/lib/types";
 
@@ -60,29 +61,31 @@ export default function Home() {
 
 
 
-  if (!booted) return <div className="min-h-screen bg-background" />;
-
   return (
-    <div className="paper-grain flex min-h-screen flex-col bg-background">
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col px-5 pb-24 pt-5 border-x border-ink/40 sm:border-ink shadow-paper-lg bg-background">
-        {/* ---- Header: Logo + Greeting + Navigation Actions ---- */}
-        <header className="sticky top-0 z-20 -mx-5 -mt-5 mb-3 flex items-center justify-between border-b border-ink bg-background/95 px-5 py-3.5 backdrop-blur-sm shadow-xs">
-          <div className="flex items-center gap-3">
-            <span
-              aria-hidden="true"
-              className="flex size-10 items-center justify-center border border-ink bg-stamp font-receipt text-sm font-semibold text-stamp-foreground"
-            >
-              {initialsOf(user?.name ?? "You")}
-            </span>
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.2em] text-ink-faint">
-                {greeting},
-              </p>
-              <p className="text-base font-bold leading-tight tracking-tight text-ink">
-                {user?.name?.split(" ")[0] ?? "friend"}
-              </p>
-            </div>
-          </div>
+    <div className="paper-grain flex min-h-[100dvh] flex-col bg-background text-ink">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-1 flex-col px-5 pb-24 pt-5 sm:border-x sm:border-ink sm:shadow-paper-lg bg-background">
+        {!booted ? (
+          <HomeSkeleton />
+        ) : (
+          <>
+            {/* ---- Header: Logo + Greeting + Navigation Actions ---- */}
+            <header className="sticky top-0 z-20 -mx-5 -mt-5 mb-3 flex items-center justify-between border-b border-ink bg-background/95 px-5 py-3.5 backdrop-blur-sm shadow-xs">
+              <div className="flex items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="flex size-10 items-center justify-center border border-ink bg-stamp font-receipt text-sm font-semibold text-stamp-foreground"
+                >
+                  {initialsOf(user?.name ?? "You")}
+                </span>
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-ink-faint">
+                    {greeting},
+                  </p>
+                  <p className="text-base font-bold leading-tight tracking-tight text-ink">
+                    {user?.name?.split(" ")[0] ?? "friend"}
+                  </p>
+                </div>
+              </div>
 
           <div className="flex items-center gap-2">
 
@@ -290,6 +293,8 @@ export default function Home() {
             </ul>
           )}
         </motion.section>
+        </>
+        )}
       </div>
       <BottomNav active="/home" />
     </div>
@@ -348,5 +353,63 @@ function ReceiptRowCard({ bill }: { bill: Bill }) {
         </span>
       </div>
     </button>
+  );
+}
+
+function HomeSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Header skeleton */}
+      <div className="-mx-5 -mt-5 mb-3 flex items-center justify-between border-b border-ink-line bg-background/95 px-5 py-3.5 shadow-xs">
+        <div className="flex items-center gap-3">
+          <Skeleton className="size-10 rounded-none border border-ink-line" />
+          <div className="space-y-1.5">
+            <Skeleton className="h-2.5 w-16" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Skeleton className="size-10 rounded-[4px] border border-ink-line" />
+          <Skeleton className="size-10 rounded-[4px] border border-ink-line" />
+          <Skeleton className="size-10 rounded-[4px] border border-ink-line" />
+        </div>
+      </div>
+
+      {/* Scan CTA skeleton */}
+      <div className="mt-6 flex w-full flex-col items-center gap-2 border-2 border-ink-line bg-card p-8 shadow-xs">
+        <Skeleton className="h-3 w-28" />
+        <Skeleton className="h-8 w-44" />
+        <Skeleton className="h-0.5 w-24" />
+        <Skeleton className="h-3 w-40" />
+      </div>
+
+      {/* Outstanding cards skeleton */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="border border-ink-line bg-card p-4 space-y-2 shadow-xs">
+          <Skeleton className="h-2.5 w-16" />
+          <Skeleton className="h-6 w-24" />
+          <Skeleton className="h-3 w-28" />
+        </div>
+        <div className="border border-ink-line bg-card p-4 space-y-2 shadow-xs">
+          <Skeleton className="h-2.5 w-14" />
+          <Skeleton className="h-6 w-20" />
+          <Skeleton className="h-3 w-24" />
+        </div>
+      </div>
+
+      {/* Recent bills skeleton */}
+      <div className="mt-6 space-y-2.5">
+        <Skeleton className="h-4 w-28" />
+        {[0, 1].map((i) => (
+          <div key={i} className="border border-ink-line bg-card p-3.5 space-y-2 shadow-xs">
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-4 w-16" />
+            </div>
+            <Skeleton className="h-3 w-48" />
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

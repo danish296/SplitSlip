@@ -169,7 +169,7 @@
   }
 
   /* Subtle newsprint grain via layered SVG noise */
-  .paper-grain {
+  .paper-grain:not([class*="fixed"]):not([class*="absolute"]) {
     position: relative;
   }
 

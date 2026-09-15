@@ -17,7 +17,6 @@ import {
   EyeOff,
   Check,
   AlertCircle,
-  RotateCw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +29,36 @@ function resolveRedirectAfterAuth(returnTo: string | null, fallback = "/home") {
     return returnTo;
   }
   return fallback;
+}
+
+function maskEmail(email: string): string {
+  if (!email || !email.includes("@")) return email;
+  const [localPart, domainPart] = email.split("@");
+  if (!domainPart) return email;
+
+  let maskedLocal = localPart;
+  if (localPart.length <= 2) {
+    maskedLocal = `${localPart[0]}*`;
+  } else if (localPart.length <= 4) {
+    maskedLocal = `${localPart[0]}**${localPart.slice(-1)}`;
+  } else {
+    maskedLocal = `${localPart.slice(0, 2)}***${localPart.slice(-1)}`;
+  }
+
+  const domainParts = domainPart.split(".");
+  if (domainParts.length >= 2) {
+    const domainName = domainParts[0];
+    const tld = domainParts.slice(1).join(".");
+    let maskedDomain = domainName;
+    if (domainName.length <= 3) {
+      maskedDomain = `${domainName[0]}*`;
+    } else {
+      maskedDomain = `${domainName.slice(0, 1)}***${domainName.slice(-1)}`;
+    }
+    return `${maskedLocal}@${maskedDomain}.${tld}`;
+  }
+
+  return `${maskedLocal}@${domainPart}`;
 }
 
 type SignUpStep = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -204,73 +233,20 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
     if (mode === "signUp") {
       if (signupStep > 0) setSignupStep((s) => (s - 1) as SignUpStep);
     } else {
-      if (signinStep > 1) setSigninStep((s) => (s - 1) as SignInStep);
+      if (signinStep > 1) {
+        setSigninStep((s) => (s - 1) as SignInStep);
+      } else {
+        setMode("signUp");
+        setSignupStep(0);
+      }
     }
   }
 
   return (
-    <div className="paper-grain flex min-h-screen flex-col bg-background">
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col border-x border-ink/40 sm:border-ink shadow-paper-lg bg-background">
-        {/* Top Header */}
-        <header className="flex items-center justify-between border-b border-ink px-5 py-4 bg-background/95 backdrop-blur-sm shadow-xs">
-          {(mode === "signUp" && signupStep > 0) || (mode === "signIn" && signinStep > 1) ? (
-            <button
-              type="button"
-              aria-label="Back"
-              onClick={handleBack}
-              className="tactile flex size-9 items-center justify-center rounded-[4px] border border-ink bg-card text-ink transition-transform hover:-translate-y-0.5 active:translate-y-0"
-            >
-              <ChevronLeft className="size-4" />
-            </button>
-          ) : (
-            <div className="flex items-center gap-2">
-              <span className="border border-ink bg-card px-2 py-0.5 font-receipt text-[10px] font-bold uppercase tracking-[0.25em] text-ink">
-                SplitSlip
-              </span>
-            </div>
-          )}
-
-          {/* Step Indicator / Mode Switch */}
-          <div className="flex items-center gap-3">
-            <span className="font-receipt text-[10px] uppercase tracking-[0.25em] text-ink-faint">
-              {mode === "signUp"
-                ? signupStep === 0
-                  ? "WELCOME"
-                  : `${signupStep} / 6`
-                : `${signinStep} / 2`}
-            </span>
-
-            <button
-              type="button"
-              aria-label="Refresh"
-              onClick={() => window.location.reload()}
-              className="tactile flex size-7 items-center justify-center rounded-[4px] border border-ink bg-card text-ink transition-transform hover:-translate-y-0.5 active:translate-y-0"
-              title="Refresh"
-            >
-              <RotateCw className="size-3" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setError(null);
-                if (mode === "signUp") {
-                  setMode("signIn");
-                  setSigninStep(1);
-                } else {
-                  setMode("signUp");
-                  setSignupStep(1);
-                }
-              }}
-              className="tactile border border-ink-line bg-paper-2 px-2 py-1 font-receipt text-[10px] uppercase tracking-wider text-ink transition-colors hover:border-ink hover:text-stamp"
-            >
-              {mode === "signUp" ? "Sign In" : "Register"}
-            </button>
-          </div>
-        </header>
-
+    <div className="paper-grain flex min-h-[100dvh] flex-col bg-background text-ink">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-md flex-1 flex-col justify-between sm:border-x sm:border-ink sm:shadow-paper-lg bg-background">
         {/* Main Body */}
-        <main className="flex flex-1 flex-col px-5 pb-8 pt-4">
+        <main className="flex flex-1 flex-col px-5 sm:px-6 py-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.75rem,env(safe-area-inset-bottom))]">
         <AnimatePresence mode="wait">
           {mode === "signUp" ? (
             <motion.div
@@ -291,6 +267,8 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
                   title="What should we call you?"
                   hint="This is the name your friends see on payment requests."
                   icon={<User className="size-4" />}
+                  onBack={handleBack}
+                  stepIndicator="1 / 6"
                 >
                   <input
                     value={name}
@@ -310,6 +288,8 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
                   title="What's your email address?"
                   hint="We'll send your settlement slips, receipts, and verification notices here."
                   icon={<Mail className="size-4" />}
+                  onBack={handleBack}
+                  stepIndicator="2 / 6"
                 >
                   <input
                     type="email"
@@ -330,6 +310,8 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
                   title="Pick a unique username"
                   hint="Friends can search and connect with you on SplitSlip using your @handle."
                   icon={<AtSign className="size-4" />}
+                  onBack={handleBack}
+                  stepIndicator="3 / 6"
                 >
                   <div className="flex items-center">
                     <span className="flex h-14 items-center border border-r-0 border-ink bg-paper-2 px-3.5 font-receipt text-base text-ink-soft">
@@ -356,6 +338,8 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
                   title="Your phone number?"
                   hint="Used for contact matching and notifications with your friends."
                   icon={<Smartphone className="size-4" />}
+                  onBack={handleBack}
+                  stepIndicator="4 / 6"
                 >
                   <div className="flex items-center gap-2">
                     <span className="flex h-14 items-center border border-ink bg-card px-3.5 font-receipt text-sm text-ink-soft">
@@ -381,6 +365,8 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
                   title="Where should your friends pay you?"
                   hint="You only need to add your own UPI ID. Your friends don't need to enter theirs."
                   icon={<Wallet className="size-4" />}
+                  onBack={handleBack}
+                  stepIndicator="5 / 6"
                 >
                   <div className="border border-ink bg-card p-4 shadow-paper">
                     <p className="font-receipt text-[10px] uppercase tracking-[0.25em] text-ink-faint">
@@ -410,6 +396,8 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
                   title="Set your secure password"
                   hint="At least 8 characters to safeguard your account and settlement ledger."
                   icon={<Lock className="size-4" />}
+                  onBack={handleBack}
+                  stepIndicator="6 / 6"
                 >
                   <div className="relative">
                     <input
@@ -505,6 +493,22 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
                       />
                     ))}
                   </div>
+
+                  {signupStep === 1 && (
+                    <div className="mt-3 text-center">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setError(null);
+                          setMode("signIn");
+                          setSigninStep(1);
+                        }}
+                        className="font-receipt text-xs text-ink-soft underline hover:text-ink"
+                      >
+                        Already registered? Sign In
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </motion.div>
@@ -523,6 +527,8 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
                   title="Welcome back. Who are you?"
                   hint="Enter your registered email address, phone, or @handle."
                   icon={<Mail className="size-4" />}
+                  onBack={handleBack}
+                  stepIndicator="1 / 2"
                 >
                   <input
                     value={loginIdentifier}
@@ -535,7 +541,7 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
                   />
                   {resolvedEmail && resolvedEmail !== loginIdentifier && (
                     <p className="mt-2 font-receipt text-xs text-stamp">
-                      ✓ Identified account: {resolvedEmail}
+                      ✓ Identified account: {maskEmail(resolvedEmail)}
                     </p>
                   )}
                 </Question>
@@ -545,8 +551,14 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
                 <Question
                   overline="STEP 02 · SECURITY"
                   title="Enter your password"
-                  hint={`Signing in as ${resolvedEmail || loginIdentifier}`}
+                  hint={
+                    resolvedEmail
+                      ? `Signing in as ${maskEmail(resolvedEmail)}`
+                      : `Signing in as ${loginIdentifier}`
+                  }
                   icon={<Lock className="size-4" />}
+                  onBack={handleBack}
+                  stepIndicator="2 / 2"
                 >
                   <div className="relative">
                     <input
@@ -644,8 +656,12 @@ export default function AuthPage({ redirectAfterAuth }: AuthProps = {}) {
 
 function Intro({ onStart, onSignIn }: { onStart: () => void; onSignIn: () => void }) {
   return (
-    <div className="flex flex-1 flex-col items-center justify-between text-center pt-2">
+    <div className="flex flex-1 flex-col items-center justify-between text-center py-2">
       <div className="flex flex-1 flex-col items-center justify-center">
+        <span className="mb-6 border border-ink bg-card px-2.5 py-1 font-receipt text-[10px] font-bold uppercase tracking-[0.25em] text-ink shadow-xs">
+          SplitSlip
+        </span>
+
         {/* Animated receipt stack illustration */}
         <div aria-hidden="true" className="relative mb-8 flex items-end justify-center gap-3">
           {/* Background slip — faded, tilted */}
@@ -722,24 +738,45 @@ function Question({
   hint,
   children,
   icon,
+  onBack,
+  stepIndicator,
 }: {
   overline: string;
   title: string;
   hint: string;
   children: ReactNode;
   icon?: ReactNode;
+  onBack?: () => void;
+  stepIndicator?: string;
 }) {
   return (
     <div className="flex flex-1 flex-col justify-center py-4">
-      <div className="mb-2 flex items-center gap-2">
-        {icon && (
-          <span className="flex size-7 items-center justify-center border border-ink bg-card text-stamp">
-            {icon}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              aria-label="Back"
+              className="tactile mr-1 flex size-8 items-center justify-center rounded-[4px] border border-ink bg-card text-ink transition-transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              <ChevronLeft className="size-4" />
+            </button>
+          )}
+          {icon && (
+            <span className="flex size-7 items-center justify-center border border-ink bg-card text-stamp">
+              {icon}
+            </span>
+          )}
+          <span className="font-receipt text-[10px] font-bold uppercase tracking-[0.25em] text-ink-faint">
+            {overline}
+          </span>
+        </div>
+        {stepIndicator && (
+          <span className="font-receipt text-[10px] uppercase tracking-[0.25em] text-ink-faint">
+            {stepIndicator}
           </span>
         )}
-        <span className="font-receipt text-[10px] font-bold uppercase tracking-[0.25em] text-ink-faint">
-          {overline}
-        </span>
       </div>
       <h1 className="text-2xl font-extrabold tracking-tight text-ink">{title}</h1>
       <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{hint}</p>

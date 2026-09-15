@@ -34,8 +34,11 @@ export async function getCurrentUser(): Promise<User | null> {
         id: user._id,
         name: user.name ?? "Friend",
         phone: user.phone ?? "",
+        email: user.email,
+        username: user.username,
         upiId: user.upiId,
         avatarColor: user.avatarColor,
+        role: user.role,
       };
     }
   } catch (err) {
@@ -57,8 +60,11 @@ export async function updateUser(patch: Partial<User>): Promise<User | null> {
         id: updated._id,
         name: updated.name ?? "Friend",
         phone: updated.phone ?? "",
+        email: updated.email,
+        username: updated.username,
         upiId: updated.upiId,
         avatarColor: updated.avatarColor,
+        role: updated.role,
       };
     }
   } catch (err) {
