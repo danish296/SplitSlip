@@ -1,5 +1,7 @@
 import { createWorker } from "tesseract.js";
 import { parseReceiptText, type ParsedReceipt } from "./receiptParser";
+import { convex } from "@/lib/convexClient";
+import { api } from "@/convex/_generated/api";
 
 export interface OcrProgress {
   status: string;
@@ -145,20 +147,48 @@ export async function processImageForReceipt(
   imageSource: string | HTMLCanvasElement | File | Blob,
   onProgress?: (p: OcrProgress) => void,
 ): Promise<ParsedReceipt> {
-  onProgress?.({ status: "Preparing image…", progress: 0.05 });
+  onProgress?.({ status: "Preparing receipt image…", progress: 0.05 });
 
-  // 1. Load onto canvas and apply high-contrast enhancement
+  // 1. Load onto canvas and apply contrast enhancement
   let processedCanvas: HTMLCanvasElement;
   try {
     const rawCanvas = await loadImageToCanvas(imageSource);
     processedCanvas = enhanceReceiptCanvas(rawCanvas);
   } catch (err) {
     console.warn("Image canvas enhancement fallback:", err);
-    // Fall back to raw source if canvas loading failed
     processedCanvas = imageSource as any;
   }
 
-  // 2. Load Tesseract Worker
+  // 2. Primary: Gemini 3.1 Flash Lite AI Receipt Vision
+  try {
+    onProgress?.({ status: "Scanning with Gemini AI Vision…", progress: 0.25 });
+    let base64Data: string = "";
+    if (processedCanvas instanceof HTMLCanvasElement) {
+      base64Data = processedCanvas.toDataURL("image/jpeg", 0.88);
+    } else if (typeof imageSource === "string" && imageSource.startsWith("data:")) {
+      base64Data = imageSource;
+    }
+
+    if (base64Data) {
+      const aiResponse: any = await convex.action(api.aiOcr.scanReceiptWithGemini, {
+        imageBase64: base64Data,
+        mimeType: "image/jpeg",
+      });
+
+      if (aiResponse?.success && aiResponse.receipt && aiResponse.receipt.items?.length > 0) {
+        onProgress?.({ status: "Verified with Gemini AI!", progress: 1.0 });
+        console.log(`[OCR] Gemini AI (${aiResponse.modelUsed}) parsed receipt:`, aiResponse.receipt);
+        return aiResponse.receipt;
+      } else {
+        console.info("[OCR] Gemini AI fallback reason:", aiResponse?.error || aiResponse?.message);
+      }
+    }
+  } catch (aiErr) {
+    console.warn("[OCR] Gemini AI action unavailable, falling back to local OCR:", aiErr);
+  }
+
+  // 3. Fallback: Local Tesseract.js Worker
+  onProgress?.({ status: "Processing with local OCR…", progress: 0.35 });
   let worker;
   try {
     worker = await getWorker(onProgress);
@@ -167,9 +197,9 @@ export async function processImageForReceipt(
     throw new Error("OCR engine failed to initialize");
   }
 
-  onProgress?.({ status: "Extracting receipt text…", progress: 0.2 });
+  onProgress?.({ status: "Extracting receipt text…", progress: 0.5 });
 
-  // 3. Recognize text on enhanced image
+  // 4. Recognize text on enhanced image
   let recognitionResult;
   try {
     recognitionResult = await worker.recognize(processedCanvas);
@@ -183,7 +213,7 @@ export async function processImageForReceipt(
 
   onProgress?.({ status: "Structuring items & taxes…", progress: 0.95 });
 
-  // 4. Parse text using universal receipt parser
+  // 5. Parse text using universal receipt parser
   const parsed = parseReceiptText(rawText);
   return parsed;
 }

@@ -9,6 +9,7 @@
  */
 
 import type * as admin from "../admin.js";
+import type * as aiOcr from "../aiOcr.js";
 import type * as auth from "../auth.js";
 import type * as authHelpers from "../authHelpers.js";
 import type * as auth_emailOtp from "../auth/emailOtp.js";
@@ -31,6 +32,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
+  aiOcr: typeof aiOcr;
   auth: typeof auth;
   authHelpers: typeof authHelpers;
   "auth/emailOtp": typeof auth_emailOtp;
