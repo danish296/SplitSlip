@@ -112,7 +112,7 @@ export default function ReviewRequest() {
               <p className="mt-1 px-1 text-[10px] leading-relaxed text-ink-faint">
                 {contact?.isRegistered
                   ? `${contact.name.split(" ")[0]} gets an in-app request.`
-                  : `${contact?.name.split(" ")[0] ?? p.displayName} isn't on SplitSlip — they'll get an SMS link.`}
+                  : `${contact?.name.split(" ")[0] ?? p.displayName} isn't on SplitSlip — shareable payment link generated (SMS delivery soon).`}
               </p>
             </li>
           );

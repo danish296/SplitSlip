@@ -373,7 +373,7 @@ export function PaymentSlip({
       </div>
       <div className="mt-1.5 flex items-center justify-between text-[9px] tracking-[0.15em] text-ink-faint">
         <span>
-          {channel === "sms" ? "VIA SMS LINK" : channel === "app" ? "IN-APP REQUEST" : "PAYMENT SLIP"}
+          {channel === "sms" ? "PAYMENT LINK · SMS SOON" : channel === "app" ? "IN-APP REQUEST" : "PAYMENT SLIP"}
         </span>
         {status && <StatusBadge status={status} />}
       </div>

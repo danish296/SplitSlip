@@ -215,7 +215,7 @@ export default function Sending() {
                       isSms ? "text-destructive" : "text-stamp",
                     )}
                   >
-                    {isSms ? "SMS →" : "APP →"}
+                    {isSms ? "LINK (SMS SOON) →" : "APP →"}
                   </p>
                 </motion.div>
               );

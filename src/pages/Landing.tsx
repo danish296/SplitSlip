@@ -9,6 +9,7 @@ import {
   Github,
   Lock,
   ScanLine,
+  UserPlus,
   Users,
   Wallet,
 } from "lucide-react";
@@ -101,12 +102,12 @@ function Overline({ children }: { children: React.ReactNode }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Interactive demo — assign an item, watch shares update              */
+/* Interactive split engine — assign an item, watch shares update      */
 /* ------------------------------------------------------------------ */
 
-const DEMO_PEOPLE = ["Danish", "Aarav", "Riya", "Kabir"];
+const SAMPLE_TABLE = ["Danish", "Aarav", "Riya", "Kabir"];
 
-function InteractiveDemo() {
+function InteractiveSplitEngine() {
   const [who, setWho] = useState<string[]>(["Danish", "Aarav"]);
 
   const share = useMemo(() => {
@@ -130,7 +131,7 @@ function InteractiveDemo() {
           reconciled to the total. This is the real engine, running live.
         </p>
         <div className="mt-6 flex flex-wrap gap-2">
-          {DEMO_PEOPLE.map((name) => {
+          {SAMPLE_TABLE.map((name) => {
             const selected = who.includes(name);
             return (
               <button
@@ -212,20 +213,26 @@ function InteractiveDemo() {
 const STEPS = [
   {
     n: "01",
-    title: "Scan the bill",
-    body: "One person pays. Photograph the paper receipt — the scanner reads the restaurant, items and GST like a cash register.",
+    title: "Scan the receipt",
+    body: "Snap a photo with the live camera or upload an image. Multimodal AI instantly extracts every dish, price, tax, and total.",
     icon: ScanLine,
   },
   {
     n: "02",
-    title: "Assign the items",
-    body: "Tap who had what. Butter chicken for three, biryani for two, naan for everyone. Exact shares, no mental math.",
-    icon: Users,
+    title: "Add friends & table mates",
+    body: "Connect with friends via their unique username or invite link. Build your frequent dinner circle for one-tap splits.",
+    icon: UserPlus,
   },
   {
     n: "03",
-    title: "Send the slips",
-    body: "Each friend gets their own little slip with the exact amount. They pay to your UPI — no typing, no chasing.",
+    title: "Assign items or split equally",
+    body: "Tap who shared what—individual dishes, shared appetizers, or equal portions. Exact shares calculated with zero mental math.",
+    icon: Users,
+  },
+  {
+    n: "04",
+    title: "Send slips & settle via UPI",
+    body: "Each friend gets a personalized digital slip. They pay directly to your personal UPI QR and verify with their UTR.",
     icon: Wallet,
   },
 ];
@@ -244,8 +251,8 @@ const FEATURES = [
     body: "Friends never hand over their UPI IDs. They just tap Pay and the money lands in your account.",
   },
   {
-    title: "SMS for the others",
-    body: "Friends on the app get an in-app request. Everyone else gets a clean payment link over SMS.",
+    title: "Shareable links (SMS soon)",
+    body: "Friends on SplitSlip receive instant in-app requests. Friends not yet on the app receive a public web slip link (automated SMS delivery coming soon).",
   },
   {
     title: "Settlement you can see",
@@ -366,7 +373,7 @@ export default function Landing() {
       {/* ---------- How it works ---------- */}
       <section className="mx-auto max-w-5xl px-5 py-14">
         <Overline>How it works</Overline>
-        <div className="mt-8 grid gap-px overflow-hidden border border-ink bg-ink md:grid-cols-3">
+        <div className="mt-8 grid gap-px overflow-hidden border border-ink bg-ink sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map((s) => (
             <div key={s.n} className="bg-card p-6">
               <div className="flex items-center justify-between">
@@ -382,10 +389,10 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ---------- Interactive demo ---------- */}
+      {/* ---------- Interactive split engine ---------- */}
       <section className="border-y border-ink bg-paper-2">
         <div className="mx-auto max-w-5xl px-5 py-16">
-          <InteractiveDemo />
+          <InteractiveSplitEngine />
         </div>
       </section>
 

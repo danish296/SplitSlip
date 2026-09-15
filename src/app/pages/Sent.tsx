@@ -137,7 +137,7 @@ export default function Sent() {
               <span className="min-w-0">
                 <span className="block truncate text-sm font-medium">{p.displayName}</span>
                 <span className="block text-[10px] uppercase tracking-[0.15em] text-ink-faint">
-                  {viaSms ? "SMS link" : "In-app request"}
+                  {viaSms ? "Payment link (SMS soon)" : "In-app request"}
                 </span>
               </span>
               <span className="flex shrink-0 items-center gap-3">
@@ -157,7 +157,7 @@ export default function Sent() {
         )}
       >
         {others.some((p) => p.status !== "paid")
-          ? "You'll see statuses update here the moment someone pays. (Demo: one reply is simulated.)"
+          ? "You'll see statuses update here in real time the moment a payment request is claimed and verified."
           : "Everyone paid — that was quick."}
       </p>
     </ScreenShell>

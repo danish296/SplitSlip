@@ -162,7 +162,7 @@ export default function SelectContacts() {
                       ) : (
                         <>
                           <MessageSquareText className="size-3" aria-hidden="true" />
-                          Invite via SMS
+                          Share Link (SMS Soon)
                         </>
                       )}
                     </span>
@@ -186,7 +186,7 @@ export default function SelectContacts() {
       {chosen.length > 0 && (
         <p className="mt-4 text-center text-[11px] leading-relaxed text-ink-faint">
           No UPI IDs needed — friends on the app get a request, everyone else
-          gets an SMS link that pays to your UPI.
+          gets a shareable payment link (SMS delivery coming soon).
         </p>
       )}
     </ScreenShell>
