@@ -43,8 +43,7 @@ dist-ssr
 build
 *.local
 
-# Convex codegen & local state
-src/convex/_generated
+# Convex local state & exports
 .convex
 convex-export*.zip
 
