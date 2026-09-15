@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="700" viewBox="0 0 340 700" role="img" aria-label="Receipt review screen">
+  <title>Review — the scanned receipt, fully editable</title>
+  <defs>
+    <filter id="g2"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <clipPath id="c2"><rect x="8" y="8" width="324" height="684" rx="6"/></clipPath>
+  </defs>
+  <g clip-path="url(#c2)">
+    <rect x="8" y="8" width="324" height="684" fill="#F0EEE6"/>
+    <rect x="8" y="8" width="324" height="684" filter="url(#g2)" opacity="0.06"/>
+
+    <!-- Header -->
+    <path d="M8 62 H332" stroke="#20211F" stroke-width="1.5"/>
+    <rect x="22" y="22" width="28" height="28" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+    <path d="M40 30 L32 36 L40 42" stroke="#20211F" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <text x="60" y="32" font-family="'IBM Plex Mono',monospace" font-size="7" letter-spacing="2.6" fill="#8B8C83">STEP 2 OF 4</text>
+    <text x="60" y="48" font-family="'Libre Franklin',sans-serif" font-size="14" font-weight="700" fill="#20211F">Check the receipt</text>
+
+    <!-- The receipt -->
+    <path d="M26 84 H314 V556
+             l-12 -12 -12 12 -12 -12 -12 12 -12 -12 -12 12 -12 -12 -12 12
+             -12 -12 -12 12 -12 -12 -12 12 -12 -12 -12 12 -12 -12 -12 12
+             -12 -12 -12 12 -12 -12 -12 12 -12 -12 -12 12 -12 -12 Z"
+          fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+
+    <text x="170" y="112" font-family="'IBM Plex Mono',monospace" font-size="13" font-weight="600" letter-spacing="3.4" fill="#20211F" text-anchor="middle">THE TABLE</text>
+    <text x="170" y="128" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="3" fill="#8B8C83" text-anchor="middle">BANGALORE</text>
+    <text x="170" y="143" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="1.6" fill="#8B8C83" text-anchor="middle">FRI, 12 SEP · 8:42 PM</text>
+    <path d="M42 156 H298" stroke="#D8D4C8" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+    <g font-family="'IBM Plex Mono',monospace" font-size="11" fill="#20211F">
+      <text x="42" y="182">2  Butter Chicken</text>
+      <text x="298" y="182" text-anchor="end">480.00</text>
+      <path d="M232 187 H298" stroke="#D8D4C8" stroke-width="1" stroke-dasharray="3 3"/>
+
+      <text x="42" y="212">1  Paneer Tikka</text>
+      <text x="298" y="212" text-anchor="end">360.00</text>
+      <path d="M232 217 H298" stroke="#D8D4C8" stroke-width="1" stroke-dasharray="3 3"/>
+
+      <text x="42" y="242">4  Butter Naan</text>
+      <text x="298" y="242" text-anchor="end">160.00</text>
+      <path d="M232 247 H298" stroke="#D8D4C8" stroke-width="1" stroke-dasharray="3 3"/>
+
+      <text x="42" y="272">1  Hyderabadi Biryani</text>
+      <text x="298" y="272" text-anchor="end">420.00</text>
+      <path d="M232 277 H298" stroke="#D8D4C8" stroke-width="1" stroke-dasharray="3 3"/>
+    </g>
+
+    <!-- Add item -->
+    <rect x="42" y="290" width="94" height="24" fill="none" stroke="#D8D4C8" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="89" y="306" font-family="'IBM Plex Mono',monospace" font-size="8.5" letter-spacing="1.4" fill="#8B8C83" text-anchor="middle">+ ADD ITEM</text>
+
+    <path d="M42 332 H298" stroke="#D8D4C8" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+    <g font-family="'IBM Plex Mono',monospace" font-size="11">
+      <text x="42" y="356" fill="#55564F">Subtotal</text>
+      <text x="298" y="356" fill="#20211F" text-anchor="end">1,420.00</text>
+      <text x="42" y="382" fill="#55564F">GST 18%</text>
+      <text x="298" y="382" fill="#20211F" text-anchor="end">255.60</text>
+      <path d="M232 387 H298" stroke="#274D40" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="42" y="408" fill="#55564F">Service charge</text>
+      <text x="298" y="408" fill="#20211F" text-anchor="end">0.00</text>
+      <path d="M232 413 H298" stroke="#274D40" stroke-width="1" stroke-dasharray="3 3"/>
+    </g>
+
+    <path d="M42 426 H298" stroke="#20211F" stroke-width="1.5"/>
+    <path d="M42 431 H298" stroke="#20211F" stroke-width="0.75"/>
+    <text x="42" y="456" font-family="'IBM Plex Mono',monospace" font-size="13" font-weight="700" letter-spacing="2" fill="#20211F">TOTAL</text>
+    <text x="298" y="456" font-family="'IBM Plex Mono',monospace" font-size="17" font-weight="700" fill="#20211F" text-anchor="end">₹1,675.60</text>
+
+    <path d="M42 476 H298" stroke="#D8D4C8" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="170" y="498" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="2.4" fill="#8B8C83" text-anchor="middle">READ FROM PHOTO · TAP ANY FIELD TO FIX</text>
+
+    <!-- Barcode -->
+    <g fill="#20211F" transform="translate(128 512)">
+      <rect width="3" height="14"/><rect x="6" width="1.5" height="14"/><rect x="11" width="4" height="14"/>
+      <rect x="18" width="1.5" height="14"/><rect x="23" width="2.5" height="14"/><rect x="29" width="4" height="14"/>
+      <rect x="36" width="1.5" height="14"/><rect x="41" width="3" height="14"/><rect x="47" width="2" height="14"/>
+      <rect x="52" width="4" height="14"/><rect x="59" width="1.5" height="14"/><rect x="64" width="2.5" height="14"/>
+      <rect x="70" width="3" height="14"/><rect x="76" width="1.5" height="14"/><rect x="81" width="4" height="14"/>
+    </g>
+
+    <!-- Footer CTA -->
+    <path d="M8 616 H332" stroke="#20211F" stroke-width="1.5"/>
+    <rect x="8" y="617" width="324" height="75" fill="#FAF9F4"/>
+    <rect x="24" y="634" width="292" height="42" fill="#274D40"/>
+    <rect x="24" y="676" width="292" height="3" fill="#1A342B"/>
+    <text x="170" y="661" font-family="'Libre Franklin',sans-serif" font-size="12" font-weight="700" letter-spacing="2" fill="#EAF3EE" text-anchor="middle">CHOOSE A SPLIT →</text>
+  </g>
+  <rect x="8" y="8" width="324" height="684" rx="6" fill="none" stroke="#20211F" stroke-width="1.5"/>
+</svg>

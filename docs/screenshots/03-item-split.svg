@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="700" viewBox="0 0 340 700" role="img" aria-label="Item split screen">
+  <title>Split by item — tap who had what</title>
+  <defs>
+    <filter id="g3"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <clipPath id="c3"><rect x="8" y="8" width="324" height="684" rx="6"/></clipPath>
+  </defs>
+  <g clip-path="url(#c3)">
+    <rect x="8" y="8" width="324" height="684" fill="#F0EEE6"/>
+    <rect x="8" y="8" width="324" height="684" filter="url(#g3)" opacity="0.06"/>
+
+    <!-- Header -->
+    <path d="M8 62 H332" stroke="#20211F" stroke-width="1.5"/>
+    <rect x="22" y="22" width="28" height="28" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+    <path d="M40 30 L32 36 L40 42" stroke="#20211F" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <text x="60" y="32" font-family="'IBM Plex Mono',monospace" font-size="7" letter-spacing="2.6" fill="#8B8C83">STEP 3 OF 4 · BY ITEM</text>
+    <text x="60" y="48" font-family="'Libre Franklin',sans-serif" font-size="14" font-weight="700" fill="#20211F">Who had what?</text>
+
+    <!-- Roster -->
+    <text x="24" y="86" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="2.4" fill="#8B8C83">AT THE TABLE</text>
+    <g font-family="'IBM Plex Mono',monospace" font-size="9.5" font-weight="600">
+      <rect x="24" y="94" width="52" height="26" fill="#274D40" stroke="#20211F" stroke-width="1.5"/>
+      <text x="50" y="111" fill="#EAF3EE" text-anchor="middle">YOU</text>
+      <rect x="82" y="94" width="62" height="26" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+      <text x="113" y="111" fill="#20211F" text-anchor="middle">AARAV</text>
+      <rect x="150" y="94" width="54" height="26" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+      <text x="177" y="111" fill="#20211F" text-anchor="middle">RIYA</text>
+      <rect x="210" y="94" width="58" height="26" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+      <text x="239" y="111" fill="#20211F" text-anchor="middle">KABIR</text>
+      <rect x="274" y="94" width="42" height="26" fill="none" stroke="#D8D4C8" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="295" y="111" fill="#8B8C83" text-anchor="middle">+ADD</text>
+    </g>
+
+    <!-- Item rows -->
+    <g>
+      <rect x="24" y="138" width="292" height="76" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+      <text x="38" y="158" font-family="'IBM Plex Mono',monospace" font-size="10.5" font-weight="600" fill="#20211F">2 × Butter Chicken</text>
+      <text x="302" y="158" font-family="'IBM Plex Mono',monospace" font-size="11" font-weight="600" fill="#20211F" text-anchor="end">₹480.00</text>
+      <g font-family="'IBM Plex Mono',monospace" font-size="8.5" font-weight="600">
+        <rect x="38" y="168" width="42" height="22" fill="#274D40"/><text x="59" y="183" fill="#EAF3EE" text-anchor="middle">YOU ✓</text>
+        <rect x="86" y="168" width="50" height="22" fill="#274D40"/><text x="111" y="183" fill="#EAF3EE" text-anchor="middle">AARAV ✓</text>
+        <rect x="142" y="168" width="42" height="22" fill="#FAF9F4" stroke="#D8D4C8" stroke-width="1.5"/><text x="163" y="183" fill="#8B8C83" text-anchor="middle">RIYA</text>
+        <rect x="190" y="168" width="46" height="22" fill="#FAF9F4" stroke="#D8D4C8" stroke-width="1.5"/><text x="213" y="183" fill="#8B8C83" text-anchor="middle">KABIR</text>
+      </g>
+      <text x="38" y="206" font-family="'IBM Plex Mono',monospace" font-size="8" letter-spacing="1.2" fill="#274D40">SPLIT 2 WAYS · ₹240.00 EACH</text>
+    </g>
+
+    <g>
+      <rect x="24" y="222" width="292" height="76" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+      <text x="38" y="242" font-family="'IBM Plex Mono',monospace" font-size="10.5" font-weight="600" fill="#20211F">1 × Paneer Tikka</text>
+      <text x="302" y="242" font-family="'IBM Plex Mono',monospace" font-size="11" font-weight="600" fill="#20211F" text-anchor="end">₹360.00</text>
+      <g font-family="'IBM Plex Mono',monospace" font-size="8.5" font-weight="600">
+        <rect x="38" y="252" width="42" height="22" fill="#FAF9F4" stroke="#D8D4C8" stroke-width="1.5"/><text x="59" y="267" fill="#8B8C83" text-anchor="middle">YOU</text>
+        <rect x="86" y="252" width="50" height="22" fill="#FAF9F4" stroke="#D8D4C8" stroke-width="1.5"/><text x="111" y="267" fill="#8B8C83" text-anchor="middle">AARAV</text>
+        <rect x="142" y="252" width="46" height="22" fill="#274D40"/><text x="165" y="267" fill="#EAF3EE" text-anchor="middle">RIYA ✓</text>
+        <rect x="194" y="252" width="46" height="22" fill="#FAF9F4" stroke="#D8D4C8" stroke-width="1.5"/><text x="217" y="267" fill="#8B8C83" text-anchor="middle">KABIR</text>
+      </g>
+      <text x="38" y="290" font-family="'IBM Plex Mono',monospace" font-size="8" letter-spacing="1.2" fill="#274D40">RIYA ONLY · ₹360.00</text>
+    </g>
+
+    <g>
+      <rect x="24" y="306" width="292" height="76" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+      <text x="38" y="326" font-family="'IBM Plex Mono',monospace" font-size="10.5" font-weight="600" fill="#20211F">4 × Butter Naan</text>
+      <text x="302" y="326" font-family="'IBM Plex Mono',monospace" font-size="11" font-weight="600" fill="#20211F" text-anchor="end">₹160.00</text>
+      <g font-family="'IBM Plex Mono',monospace" font-size="8.5" font-weight="600">
+        <rect x="38" y="336" width="88" height="22" fill="#20211F"/><text x="82" y="351" fill="#FAF9F4" text-anchor="middle">EVERYONE ✓</text>
+      </g>
+      <text x="38" y="374" font-family="'IBM Plex Mono',monospace" font-size="8" letter-spacing="1.2" fill="#274D40">SPLIT 4 WAYS · ₹40.00 EACH</text>
+    </g>
+
+    <!-- Unassigned warning -->
+    <g>
+      <rect x="24" y="390" width="292" height="52" fill="#FAF9F4" stroke="#8E3B32" stroke-width="1.5"/>
+      <text x="38" y="410" font-family="'IBM Plex Mono',monospace" font-size="10.5" font-weight="600" fill="#20211F">1 × Hyderabadi Biryani</text>
+      <text x="302" y="410" font-family="'IBM Plex Mono',monospace" font-size="11" font-weight="600" fill="#20211F" text-anchor="end">₹420.00</text>
+      <text x="38" y="430" font-family="'IBM Plex Mono',monospace" font-size="8" letter-spacing="1.2" fill="#8E3B32">⚠ NOBODY ASSIGNED YET</text>
+    </g>
+
+    <!-- Running total -->
+    <path d="M24 466 H316" stroke="#D8D4C8" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="24" y="488" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="2.4" fill="#8B8C83">SHARES SO FAR · GST SPREAD PROPORTIONALLY</text>
+    <g font-family="'IBM Plex Mono',monospace" font-size="11">
+      <text x="24" y="512" fill="#20211F">You</text>
+      <text x="316" y="512" fill="#20211F" text-anchor="end">330.44</text>
+      <text x="24" y="534" fill="#20211F">Aarav</text>
+      <text x="316" y="534" fill="#20211F" text-anchor="end">330.44</text>
+      <text x="24" y="556" fill="#20211F">Riya</text>
+      <text x="316" y="556" fill="#20211F" text-anchor="end">472.06</text>
+      <text x="24" y="578" fill="#20211F">Kabir</text>
+      <text x="316" y="578" fill="#20211F" text-anchor="end">47.24</text>
+    </g>
+    <path d="M24 590 H316" stroke="#20211F" stroke-width="1.5"/>
+    <text x="24" y="608" font-family="'IBM Plex Mono',monospace" font-size="9" letter-spacing="1.6" fill="#8E3B32">1 ITEM LEFT TO ASSIGN</text>
+    <text x="316" y="608" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="700" fill="#20211F" text-anchor="end">₹1,180.18</text>
+
+    <!-- Footer -->
+    <path d="M8 626 H332" stroke="#20211F" stroke-width="1.5"/>
+    <rect x="8" y="627" width="324" height="65" fill="#FAF9F4"/>
+    <rect x="24" y="641" width="292" height="40" fill="#E7E4DA"/>
+    <text x="170" y="666" font-family="'Libre Franklin',sans-serif" font-size="11.5" font-weight="700" letter-spacing="1.8" fill="#8B8C83" text-anchor="middle">ASSIGN EVERY ITEM TO CONTINUE</text>
+  </g>
+  <rect x="8" y="8" width="324" height="684" rx="6" fill="none" stroke="#20211F" stroke-width="1.5"/>
+</svg>

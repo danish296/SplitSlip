@@ -1,0 +1,416 @@
+/* DO NOT CHANGE */
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+
+/* DO NOT CHANGE */
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  /* Papery custom tokens */
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-ink-line: var(--ink-line);
+  --color-ink-rule: var(--ink-rule);
+  --color-stamp: var(--stamp);
+  --color-stamp-foreground: var(--stamp-foreground);
+  --color-mint: var(--mint);
+  --font-ui: var(--font-ui);
+  --font-mono-receipt: var(--font-mono-receipt);
+}
+
+/* Papery theme — newspaper-inspired, warm paper, quiet ink */
+:root {
+  --radius: 0.25rem;
+  --background: #F0EEE6;
+  --foreground: #20211F;
+  --card: #FAF9F4;
+  --card-foreground: #20211F;
+  --popover: #FAF9F4;
+  --popover-foreground: #20211F;
+  --primary: #20211F;
+  --primary-foreground: #FAF9F4;
+  --secondary: #E7E4DA;
+  --secondary-foreground: #20211F;
+  --muted: #E7E4DA;
+  --muted-foreground: #6E6F68;
+  --accent: #E3F0EB;
+  --accent-foreground: #274D40;
+  --destructive: #8E3B32;
+  --border: #20211F;
+  --input: #C9C5B8;
+  --ring: #20211F;
+  --chart-1: #274D40;
+  --chart-2: #8E3B32;
+  --chart-3: #6E6F68;
+  --chart-4: #A39E8F;
+  --chart-5: #20211F;
+  --sidebar: #FAF9F4;
+  --sidebar-foreground: #20211F;
+  --sidebar-primary: #20211F;
+  --sidebar-primary-foreground: #FAF9F4;
+  --sidebar-accent: #E7E4DA;
+  --sidebar-accent-foreground: #20211F;
+  --sidebar-border: #20211F;
+  --sidebar-ring: #20211F;
+  /* Papery custom tokens */
+  --paper: #F0EEE6;
+  --paper-2: #FAF9F4;
+  --ink: #20211F;
+  --ink-soft: #55564F;
+  --ink-faint: #8B8C83;
+  --ink-line: #D8D4C8;
+  --ink-rule: #20211F;
+  --stamp: #274D40;
+  --stamp-foreground: #EAF3EE;
+  --mint: #E3F0EB;
+}
+
+.dark {
+  --background: #1C1C19;
+  --foreground: #EFEDE4;
+  --card: #232320;
+  --card-foreground: #EFEDE4;
+  --popover: #232320;
+  --popover-foreground: #EFEDE4;
+  --primary: #EFEDE4;
+  --primary-foreground: #1C1C19;
+  --secondary: #2C2C28;
+  --secondary-foreground: #EFEDE4;
+  --muted: #2C2C28;
+  --muted-foreground: #A3A29A;
+  --accent: #243830;
+  --accent-foreground: #DCEBE3;
+  --destructive: #C06B5F;
+  --border: #3B3B36;
+  --input: #3B3B36;
+  --ring: #EFEDE4;
+  --paper: #1C1C19;
+  --paper-2: #232320;
+  --ink: #EFEDE4;
+  --ink-soft: #B9B8AF;
+  --ink-faint: #86867E;
+  --ink-line: #3B3B36;
+  --ink-rule: #EFEDE4;
+  --stamp: #9DC3B2;
+  --stamp-foreground: #14251E;
+  --mint: #243830;
+}
+
+@theme {
+  --font-ui: "Libre Franklin", ui-sans-serif, system-ui, sans-serif;
+  --font-mono-receipt: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-ui);
+    letter-spacing: -0.01em;
+  }
+
+  button:not([disabled]),
+  [role="button"]:not([disabled]) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--stamp) 22%, transparent);
+  }
+}
+
+@layer utilities {
+  .font-receipt {
+    font-family: var(--font-mono-receipt);
+  }
+
+  /* Subtle newsprint grain via layered SVG noise */
+  .paper-grain {
+    position: relative;
+  }
+
+  .paper-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+  }
+
+  .paper-grain>*:not([class*="fixed"]):not([class*="sticky"]) {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Perforated receipt edges */
+  .perf-bottom {
+    -webkit-mask-image: radial-gradient(circle at 6px 100%, transparent 5px, black 5.5px);
+    mask-image: radial-gradient(circle at 6px 100%, transparent 5px, black 5.5px);
+    -webkit-mask-size: 12px 12px;
+    mask-size: 12px 12px;
+    -webkit-mask-repeat: repeat-x;
+    mask-repeat: repeat-x;
+  }
+
+  .perf-top {
+    -webkit-mask-image: radial-gradient(circle at 6px 0%, transparent 5px, black 5.5px);
+    mask-image: radial-gradient(circle at 6px 0%, transparent 5px, black 5.5px);
+    -webkit-mask-size: 12px 12px;
+    mask-size: 12px 12px;
+    -webkit-mask-repeat: repeat-x;
+    mask-repeat: repeat-x;
+  }
+
+  /* Zig-zag torn edge (bottom) */
+  .torn-bottom {
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px),
+        97% 100%, 94% calc(100% - 7px), 91% 100%, 88% calc(100% - 7px),
+        85% 100%, 82% calc(100% - 7px), 79% 100%, 76% calc(100% - 7px),
+        73% 100%, 70% calc(100% - 7px), 67% 100%, 64% calc(100% - 7px),
+        61% 100%, 58% calc(100% - 7px), 55% 100%, 52% calc(100% - 7px),
+        49% 100%, 46% calc(100% - 7px), 43% 100%, 40% calc(100% - 7px),
+        37% 100%, 34% calc(100% - 7px), 31% 100%, 28% calc(100% - 7px),
+        25% 100%, 22% calc(100% - 7px), 19% 100%, 16% calc(100% - 7px),
+        13% 100%, 10% calc(100% - 7px), 7% 100%, 4% calc(100% - 7px), 1% 100%, 0 calc(100% - 7px));
+  }
+
+  /* Dashed ledger rule */
+  .rule-dashed {
+    background-image: linear-gradient(to right, var(--ink-line) 55%, transparent 45%);
+    background-size: 6px 1px;
+    background-repeat: repeat-x;
+    height: 1px;
+  }
+
+  .rule-double {
+    border-top: 1px solid var(--ink-rule);
+    box-shadow: 0 3px 0 -2px var(--ink-rule);
+  }
+
+  /* Thermal-printer barcode strip */
+  .barcode {
+    background-image: repeating-linear-gradient(90deg,
+        var(--ink) 0 2px, transparent 2px 5px,
+        var(--ink) 5px 6px, transparent 6px 11px,
+        var(--ink) 11px 14px, transparent 14px 16px,
+        var(--ink) 16px 17px, transparent 17px 21px,
+        var(--ink) 21px 23px, transparent 23px 26px);
+  }
+
+  /* Tactile press: compress shadow + sink */
+  .tactile {
+    transition: transform 120ms ease, box-shadow 120ms ease;
+    will-change: transform;
+  }
+
+  .tactile:active:not(:disabled) {
+    transform: translateY(1.5px);
+  }
+
+  .shadow-paper {
+    box-shadow: 0 1px 0 0 color-mix(in srgb, var(--ink) 12%, transparent),
+      0 2px 6px -2px color-mix(in srgb, var(--ink) 18%, transparent);
+  }
+
+  .shadow-paper-lg {
+    box-shadow: 0 2px 0 0 color-mix(in srgb, var(--ink) 14%, transparent),
+      0 14px 30px -14px color-mix(in srgb, var(--ink) 35%, transparent);
+  }
+
+  .tactile-hard {
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+
+  .tactile-hard:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 0 transparent !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Thermal receipt printer (CodePen-inspired, React-state driven)       */
+/* No animation-timeline / scroll-driven — the machine is stepped by    */
+/* CSS steps() so the paper feeds in mechanical increments.             */
+/* ------------------------------------------------------------------ */
+
+/* The printer body: metal case with a slot cut out of the top edge */
+.printer-body {
+  position: relative;
+  background: linear-gradient(to bottom, #6f6e66 0%, #5d5c55 10%, #4b4a44 45%, #3d3c37 100%);
+  box-shadow:
+    inset 0 2px 2px rgb(255 255 255 / 0.1),
+    inset 0 -8px 16px rgb(0 0 0 / 0.22),
+    0 -0.4rem 1.6rem rgb(32 33 31 / 0.25);
+}
+
+/* Slot: a hard-edged notch in the top edge of the case */
+.printer-slot {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0c0c0a;
+  box-shadow:
+    inset 0 3px 5px rgb(0 0 0 / 0.95),
+    0 -1px 0 0 rgb(255 255 255 / 0.14);
+}
+
+/* Power LED on the case */
+.printer-led {
+  position: absolute;
+  width: 4px;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: #6f6e66;
+  box-shadow: 0 0 5px 1px transparent;
+}
+
+.printer-led.is-blinking {
+  animation: printer-led-blink 1.4s steps(1) infinite;
+}
+
+.printer-led.is-done {
+  background: rgb(187 244 81);
+  box-shadow: 0 0 6px 1px rgb(154 230 0);
+}
+
+@keyframes printer-led-blink {
+
+  0%,
+  55% {
+    background: #6f6e66;
+    box-shadow: 0 0 5px 1px transparent;
+  }
+
+  56%,
+  100% {
+    background: rgb(187 244 81);
+    box-shadow: 0 0 6px 1px rgb(154 230 0);
+  }
+}
+
+/* Receipt paper emerging from the slot */
+.printer-receipt {
+  background: var(--card);
+  color: var(--ink);
+  box-shadow:
+    0 0 1px rgb(0 0 0 / 0.25),
+    0 0.7rem 2rem rgb(32 33 31 / 0.3);
+}
+
+/* Zig-zag perforation strips at both cut edges (matches the CodePen receipt) */
+.printer-receipt::before,
+.printer-receipt::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background:
+    linear-gradient(135deg, transparent 75%, var(--card) 75%) 0 0 / 5px 5px repeat-x;
+}
+
+.printer-receipt::before {
+  top: -5px;
+}
+
+.printer-receipt::after {
+  bottom: -5px;
+}
+
+/* Paper feed animation removed — the receipt reveals lines progressively
+   via JS state; the CSS jitter was redundant and caused layout shifts. */
+
+/* Machine jitter animation removed — was vibrating adjacent layout. */
+
+/* Tear-off: the receipt rips away upward, mechanical not floaty */
+.printer-receipt.is-tearing {
+  animation: printer-tear-off 620ms cubic-bezier(0.3, 0, 0.4, 1) forwards;
+}
+
+@keyframes printer-tear-off {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+
+  18% {
+    transform: translateY(-26px) rotate(-0.6deg);
+  }
+
+  42% {
+    transform: translateY(-14px) rotate(1.4deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-64vh) rotate(7deg);
+    opacity: 0;
+  }
+}
+
+/* Mechanical, deliberate motion */
+@media (prefers-reduced-motion: reduce) {
+
+  .printer-led.is-blinking,
+  .printer-receipt.is-tearing {
+    animation: none !important;
+  }
+}
+
+/* Mechanical, deliberate motion (legacy block) */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

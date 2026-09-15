@@ -1,0 +1,22 @@
+{
+  "name": "SplitSlip — Scan. Split. Settle.",
+  "short_name": "SplitSlip",
+  "description": "Scan a restaurant receipt, split it by items, and collect exactly what everyone owes.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F0EEE6",
+  "theme_color": "#F0EEE6",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

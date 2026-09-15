@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SplitSlip</string>
+    <string name="title_activity_main">SplitSlip</string>
+    <string name="package_name">com.splitslip.app</string>
+    <string name="custom_url_scheme">com.splitslip.app</string>
+</resources>

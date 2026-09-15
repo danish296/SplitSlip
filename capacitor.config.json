@@ -1,0 +1,12 @@
+{
+  "appId": "com.splitslip.app",
+  "appName": "SplitSlip",
+  "webDir": "dist",
+  "plugins": {
+    "StatusBar": {
+      "overlaysWebView": false,
+      "style": "DARK",
+      "backgroundColor": "#F0EEE6"
+    }
+  }
+}

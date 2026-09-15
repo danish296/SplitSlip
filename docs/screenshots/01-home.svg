@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="700" viewBox="0 0 340 700" role="img" aria-label="SplitSlip home screen">
+  <title>Home — outstanding balances and recent splits</title>
+  <defs>
+    <filter id="g1"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <clipPath id="c1"><rect x="8" y="8" width="324" height="684" rx="6"/></clipPath>
+  </defs>
+  <g clip-path="url(#c1)">
+    <rect x="8" y="8" width="324" height="684" fill="#F0EEE6"/>
+    <rect x="8" y="8" width="324" height="684" filter="url(#g1)" opacity="0.06"/>
+
+    <!-- Header -->
+    <rect x="8" y="8" width="324" height="62" fill="#F0EEE6"/>
+    <path d="M8 70 H332" stroke="#20211F" stroke-width="1.5"/>
+    <rect x="24" y="24" width="32" height="32" fill="#274D40" stroke="#20211F" stroke-width="1.5"/>
+    <text x="40" y="45" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="600" fill="#EAF3EE" text-anchor="middle">DA</text>
+    <text x="66" y="34" font-family="'Libre Franklin',sans-serif" font-size="8" letter-spacing="1.6" fill="#8B8C83">GOOD EVENING,</text>
+    <text x="66" y="50" font-family="'Libre Franklin',sans-serif" font-size="14" font-weight="700" fill="#20211F">Danish</text>
+    <g fill="#FAF9F4" stroke="#20211F" stroke-width="1.5">
+      <rect x="236" y="24" width="30" height="30"/><rect x="272" y="24" width="30" height="30"/>
+    </g>
+    <circle cx="300" cy="26" r="7" fill="#274D40"/>
+    <text x="300" y="29.5" font-family="'Libre Franklin',sans-serif" font-size="8" font-weight="700" fill="#EAF3EE" text-anchor="middle">3</text>
+
+    <!-- Scan CTA -->
+    <rect x="24" y="90" width="292" height="92" fill="#20211F"/>
+    <rect x="24" y="182" width="292" height="4" fill="#55564F"/>
+    <text x="170" y="120" font-family="'IBM Plex Mono',monospace" font-size="8" letter-spacing="3.5" fill="#A39E8F" text-anchor="middle">FEED A RECEIPT</text>
+    <text x="170" y="149" font-family="'Libre Franklin',sans-serif" font-size="24" font-weight="800" letter-spacing="2" fill="#FAF9F4" text-anchor="middle">SCAN BILL</text>
+    <path d="M136 160 H204" stroke="#8B8C83" stroke-width="2"/>
+    <text x="170" y="174" font-family="'IBM Plex Mono',monospace" font-size="7" letter-spacing="2" fill="#A39E8F" text-anchor="middle">SPLIT BY ITEMS · SEND SLIPS</text>
+
+    <!-- Balance tiles -->
+    <rect x="24" y="202" width="140" height="80" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+    <text x="38" y="222" font-family="'IBM Plex Mono',monospace" font-size="7" letter-spacing="2.4" fill="#8B8C83">OUTSTANDING</text>
+    <text x="38" y="248" font-family="'IBM Plex Mono',monospace" font-size="20" font-weight="600" fill="#20211F">₹1,256</text>
+    <text x="38" y="266" font-family="'Libre Franklin',sans-serif" font-size="9" fill="#55564F">3 people owe you</text>
+
+    <rect x="176" y="202" width="140" height="80" fill="#FAF9F4" stroke="#D8D4C8" stroke-width="1.5"/>
+    <text x="190" y="222" font-family="'IBM Plex Mono',monospace" font-size="7" letter-spacing="2.4" fill="#8B8C83">YOU OWE</text>
+    <text x="190" y="248" font-family="'IBM Plex Mono',monospace" font-size="20" font-weight="600" fill="#20211F">₹418</text>
+    <text x="190" y="266" font-family="'Libre Franklin',sans-serif" font-size="9" fill="#55564F">On bills friends paid</text>
+
+    <!-- Slips to pay -->
+    <text x="24" y="316" font-family="'Libre Franklin',sans-serif" font-size="11" font-weight="700" letter-spacing="1.2" fill="#20211F">SLIPS TO PAY (1)</text>
+    <rect x="24" y="328" width="292" height="62" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+    <text x="38" y="349" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="700" letter-spacing="1" fill="#20211F">CHAI POINT</text>
+    <text x="38" y="364" font-family="'IBM Plex Mono',monospace" font-size="8.5" fill="#55564F">Requested by Aarav · 2d ago</text>
+    <text x="38" y="379" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="1.2" fill="#274D40">● PAY VIA UPI</text>
+    <text x="302" y="356" font-family="'IBM Plex Mono',monospace" font-size="14" font-weight="700" fill="#20211F" text-anchor="end">₹418.90</text>
+    <text x="302" y="372" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="1" fill="#274D40" text-anchor="end">VIEW SLIP →</text>
+
+    <!-- Recently split -->
+    <text x="24" y="428" font-family="'Libre Franklin',sans-serif" font-size="11" font-weight="700" letter-spacing="1.2" fill="#20211F">RECENTLY SPLIT</text>
+    <text x="316" y="428" font-family="'Libre Franklin',sans-serif" font-size="9" font-weight="600" letter-spacing="1.2" fill="#274D40" text-anchor="end">ALL BILLS ›</text>
+
+    <g>
+      <rect x="24" y="440" width="292" height="66" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+      <text x="38" y="462" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" letter-spacing="1.2" fill="#20211F">THE TABLE</text>
+      <text x="38" y="477" font-family="'Libre Franklin',sans-serif" font-size="9" fill="#55564F">4 people · you paid</text>
+      <text x="302" y="464" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="600" fill="#20211F" text-anchor="end">₹1,675.60</text>
+      <text x="302" y="478" font-family="'Libre Franklin',sans-serif" font-size="7.5" letter-spacing="1.4" fill="#8B8C83" text-anchor="end">2 DAYS AGO</text>
+      <rect x="38" y="488" width="18" height="4" fill="#274D40"/><rect x="59" y="488" width="18" height="4" fill="#274D40"/>
+      <rect x="80" y="488" width="18" height="4" fill="#D8D4C8"/><rect x="101" y="488" width="18" height="4" fill="#D8D4C8"/>
+      <text x="302" y="493" font-family="'IBM Plex Mono',monospace" font-size="7" letter-spacing="1.6" fill="#8B8C83" text-anchor="end">2 PENDING</text>
+    </g>
+    <g>
+      <rect x="24" y="514" width="292" height="66" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+      <text x="38" y="536" font-family="'IBM Plex Mono',monospace" font-size="10" font-weight="600" letter-spacing="1.2" fill="#20211F">MEGHANA FOODS</text>
+      <text x="38" y="551" font-family="'Libre Franklin',sans-serif" font-size="9" fill="#55564F">3 people · you paid</text>
+      <text x="302" y="538" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="600" fill="#20211F" text-anchor="end">₹940.00</text>
+      <text x="302" y="552" font-family="'Libre Franklin',sans-serif" font-size="7.5" letter-spacing="1.4" fill="#8B8C83" text-anchor="end">LAST WEEK</text>
+      <rect x="38" y="562" width="18" height="4" fill="#274D40"/><rect x="59" y="562" width="18" height="4" fill="#274D40"/>
+      <rect x="80" y="562" width="18" height="4" fill="#274D40"/>
+      <text x="302" y="567" font-family="'IBM Plex Mono',monospace" font-size="7" letter-spacing="1.6" fill="#274D40" text-anchor="end">SETTLED</text>
+    </g>
+
+    <!-- Bottom nav -->
+    <path d="M8 636 H332" stroke="#20211F" stroke-width="1.5"/>
+    <rect x="8" y="637" width="324" height="55" fill="#FAF9F4"/>
+    <g font-family="'Libre Franklin',sans-serif" font-size="7.5" letter-spacing="1.4" text-anchor="middle">
+      <rect x="55" y="652" width="16" height="14" fill="none" stroke="#274D40" stroke-width="2"/>
+      <text x="63" y="681" fill="#274D40" font-weight="700">HOME</text>
+      <rect x="162" y="652" width="16" height="14" fill="none" stroke="#8B8C83" stroke-width="1.5"/>
+      <text x="170" y="681" fill="#8B8C83" font-weight="600">HISTORY</text>
+      <circle cx="277" cy="659" r="7" fill="none" stroke="#8B8C83" stroke-width="1.5"/>
+      <text x="277" y="681" fill="#8B8C83" font-weight="600">YOU</text>
+    </g>
+  </g>
+  <rect x="8" y="8" width="324" height="684" rx="6" fill="none" stroke="#20211F" stroke-width="1.5"/>
+</svg>

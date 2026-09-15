@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="700" viewBox="0 0 340 700" role="img" aria-label="Payment slip screen">
+  <title>The slip — pay over UPI, then submit the UTR</title>
+  <defs>
+    <filter id="g4"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <clipPath id="c4"><rect x="8" y="8" width="324" height="684" rx="6"/></clipPath>
+  </defs>
+  <g clip-path="url(#c4)">
+    <rect x="8" y="8" width="324" height="684" fill="#F0EEE6"/>
+    <rect x="8" y="8" width="324" height="684" filter="url(#g4)" opacity="0.06"/>
+
+    <!-- Header -->
+    <path d="M8 62 H332" stroke="#20211F" stroke-width="1.5"/>
+    <rect x="22" y="22" width="28" height="28" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+    <path d="M40 30 L32 36 L40 42" stroke="#20211F" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <text x="60" y="32" font-family="'IBM Plex Mono',monospace" font-size="7" letter-spacing="2.6" fill="#8B8C83">THE TABLE · SETTLEMENT</text>
+    <text x="60" y="48" font-family="'Libre Franklin',sans-serif" font-size="14" font-weight="700" fill="#20211F">Payment request</text>
+
+    <!-- The slip -->
+    <path d="M60 82 H280 V296
+             l-11 -11 -11 11 -11 -11 -11 11 -11 -11 -11 11 -11 -11 -11 11
+             -11 -11 -11 11 -11 -11 -11 11 -11 -11 -11 11 -11 -11 -11 11
+             -11 -11 -11 11 -11 -11 -11 11 Z"
+          fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+    <text x="170" y="106" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="2.8" fill="#8B8C83" text-anchor="middle">THE TABLE · DINNER SPLIT</text>
+    <text x="170" y="132" font-family="'IBM Plex Mono',monospace" font-size="10.5" fill="#55564F" text-anchor="middle">Danish is requesting</text>
+    <text x="170" y="176" font-family="'IBM Plex Mono',monospace" font-size="34" font-weight="700" fill="#274D40" text-anchor="middle">₹418.90</text>
+    <text x="170" y="200" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#55564F" text-anchor="middle">for dinner at The Table</text>
+    <text x="170" y="215" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#55564F" text-anchor="middle">Friday, 12 September 2026</text>
+    <path d="M76 230 H264" stroke="#D8D4C8" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="170" y="250" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="1.8" fill="#8B8C83" text-anchor="middle">BILL TOTAL ₹1,675.60 · YOUR SHARE ₹418.90</text>
+    <text x="170" y="265" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="1.8" fill="#8B8C83" text-anchor="middle">VALID UNTIL 19 SEPTEMBER 2026</text>
+    <text x="170" y="282" font-family="'IBM Plex Mono',monospace" font-size="8" letter-spacing="1.8" fill="#55564F" text-anchor="middle">REF: SS-K4M2QP</text>
+
+    <!-- UPI CTA -->
+    <rect x="24" y="322" width="292" height="46" fill="#274D40" stroke="#20211F" stroke-width="1.5"/>
+    <text x="170" y="351" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="600" letter-spacing="1.4" fill="#EAF3EE" text-anchor="middle">PAY ₹418.90 VIA UPI  ↗</text>
+    <text x="170" y="382" font-family="'Libre Franklin',sans-serif" font-size="8.5" fill="#8B8C83" text-anchor="middle">Opens GPay, PhonePe, Paytm, BHIM or any UPI app</text>
+
+    <!-- Desktop fallback -->
+    <rect x="24" y="396" width="292" height="70" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+    <text x="38" y="414" font-family="'IBM Plex Mono',monospace" font-size="7" font-weight="700" letter-spacing="2" fill="#8B8C83">DESKTOP / WEB FALLBACK</text>
+    <text x="302" y="414" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="1.2" fill="#274D40" text-anchor="end">SHOW QR CODE</text>
+    <rect x="38" y="424" width="264" height="28" fill="#F0EEE6" stroke="#D8D4C8" stroke-width="1.5"/>
+    <text x="48" y="442" font-family="'IBM Plex Mono',monospace" font-size="9" fill="#55564F">Payer UPI ID:</text>
+    <text x="222" y="442" font-family="'IBM Plex Mono',monospace" font-size="9" font-weight="600" fill="#20211F" text-anchor="end">danish@okhdfc</text>
+    <rect x="232" y="430" width="34" height="16" fill="#FAF9F4" stroke="#20211F" stroke-width="1.2"/>
+    <text x="249" y="441.5" font-family="'IBM Plex Mono',monospace" font-size="7" font-weight="700" fill="#20211F" text-anchor="middle">COPY</text>
+
+    <!-- UTR form -->
+    <rect x="24" y="480" width="292" height="132" fill="#FAF9F4" stroke="#20211F" stroke-width="1.5"/>
+    <text x="38" y="500" font-family="'IBM Plex Mono',monospace" font-size="9" font-weight="700" letter-spacing="2" fill="#20211F">I'VE PAID · SUBMIT UTR</text>
+    <text x="302" y="500" font-family="'IBM Plex Mono',monospace" font-size="7" letter-spacing="1.2" fill="#8B8C83" text-anchor="end">VERIFICATION</text>
+    <path d="M38 508 H302" stroke="#D8D4C8" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="38" y="526" font-family="'IBM Plex Mono',monospace" font-size="8.5" fill="#55564F">Enter the 12-digit UPI reference so Danish</text>
+    <text x="38" y="539" font-family="'IBM Plex Mono',monospace" font-size="8.5" fill="#55564F">can verify and mark you settled.</text>
+
+    <rect x="38" y="549" width="264" height="28" fill="#F0EEE6" stroke="#274D40" stroke-width="1.5"/>
+    <text x="48" y="567" font-family="'IBM Plex Mono',monospace" font-size="11" fill="#20211F">428901234567</text>
+    <rect x="290" y="556" width="1.5" height="14" fill="#274D40"/>
+
+    <rect x="38" y="585" width="264" height="16" fill="#274D40"/>
+    <text x="170" y="597" font-family="'Libre Franklin',sans-serif" font-size="9" font-weight="700" letter-spacing="1.6" fill="#EAF3EE" text-anchor="middle">SUBMIT UTR CLAIM</text>
+
+    <!-- Awaiting verification note -->
+    <rect x="24" y="626" width="292" height="46" fill="#E3F0EB" stroke="#274D40" stroke-width="1.5"/>
+    <circle cx="46" cy="649" r="9" fill="none" stroke="#274D40" stroke-width="1.8"/>
+    <path d="M46 644 V649 L50 652" stroke="#274D40" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <text x="64" y="645" font-family="'IBM Plex Mono',monospace" font-size="8.5" font-weight="700" letter-spacing="1.2" fill="#274D40">CLAIM SUBMITTED</text>
+    <text x="64" y="658" font-family="'IBM Plex Mono',monospace" font-size="8" fill="#55564F">Waiting for Danish to confirm the UTR.</text>
+  </g>
+  <rect x="8" y="8" width="324" height="684" rx="6" fill="none" stroke="#20211F" stroke-width="1.5"/>
+</svg>

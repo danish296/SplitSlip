@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="SplitSlip logo">
+  <title>SplitSlip</title>
+
+  <!-- Stamp-green rounded tile -->
+  <rect x="0" y="0" width="512" height="512" rx="112" fill="#274D40"/>
+
+  <!-- Thermal printer body -->
+  <rect x="104" y="284" width="304" height="128" rx="20" fill="#20211F"/>
+  <rect x="104" y="284" width="304" height="128" rx="20" fill="none" stroke="#0E1A15" stroke-width="6"/>
+  <!-- Paper slot -->
+  <rect x="152" y="298" width="208" height="16" rx="8" fill="#0C0C0A"/>
+  <!-- Status light -->
+  <circle cx="358" cy="372" r="11" fill="#9DC3B2"/>
+
+  <!-- Receipt feeding out of the slot, with a torn bottom edge -->
+  <path d="M156 306 H356 V246
+           l-12.5 -13 -12.5 13 -12.5 -13 -12.5 13 -12.5 -13 -12.5 13
+           -12.5 -13 -12.5 13 -12.5 -13 -12.5 13 -12.5 -13 -12.5 13
+           -12.5 -13 -12.5 13 -12.5 -13 Z"
+        fill="#FAF9F4"/>
+
+  <!-- Ledger rules on the slip -->
+  <g stroke="#8B8C83" stroke-width="9" stroke-linecap="round">
+    <path d="M186 272 H274"/>
+    <path d="M186 300 H248"/>
+  </g>
+  <!-- Two settled line items -->
+  <g fill="#274D40">
+    <rect x="296" y="265" width="34" height="10" rx="5"/>
+    <rect x="270" y="293" width="56" height="10" rx="5"/>
+  </g>
+
+  <!-- Split mark: one total forking into two shares -->
+  <g stroke="#FAF9F4" stroke-width="16" stroke-linecap="round" fill="none">
+    <path d="M256 92 V132"/>
+    <path d="M256 132 L200 188"/>
+    <path d="M256 132 L312 188"/>
+  </g>
+  <g fill="#9DC3B2">
+    <circle cx="200" cy="196" r="16"/>
+    <circle cx="312" cy="196" r="16"/>
+  </g>
+  <circle cx="256" cy="86" r="17" fill="#FAF9F4"/>
+</svg>
