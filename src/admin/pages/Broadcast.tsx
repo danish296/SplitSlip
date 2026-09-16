@@ -8,6 +8,9 @@ import {
   Sparkles,
   Smartphone,
   Download,
+  ExternalLink,
+  Megaphone,
+  CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -21,6 +24,11 @@ export default function AdminBroadcast() {
   const broadcast = useMutation(api.admin.broadcastNotification);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
+  const [broadcastType, setBroadcastType] = useState<
+    "feature_announcement" | "system_update" | "general_announcement" | "broadcast"
+  >("feature_announcement");
+  const [broadcastLink, setBroadcastLink] = useState("");
+  const [broadcastLinkText, setBroadcastLinkText] = useState("Learn More");
   const [sending, setSending] = useState(false);
   const [lastResult, setLastResult] = useState<{ sent: number } | null>(null);
 
@@ -95,11 +103,16 @@ export default function AdminBroadcast() {
       const result = await broadcast({
         title: title.trim(),
         message: message.trim(),
+        notificationType: broadcastType,
+        link: broadcastLink.trim() || undefined,
+        linkText: broadcastLinkText.trim() || undefined,
       });
       setLastResult(result);
       toast.success(`Broadcast sent to ${result.sent} users`);
       setTitle("");
       setMessage("");
+      setBroadcastLink("");
+      setBroadcastLinkText("Learn More");
     } catch (err: any) {
       toast.error(err?.message || "Failed to send broadcast");
     } finally {
@@ -212,62 +225,292 @@ export default function AdminBroadcast() {
 
       {/* Tab 1: Broadcast Notification */}
       {activeTab === "broadcast" && (
-        <div className="max-w-xl">
-          <form onSubmit={handleSendBroadcast} className="rounded-lg border border-gray-800 bg-[#161b22] p-5 sm:p-6">
-            <div className="mb-4">
-              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-6 max-w-5xl">
+          <form onSubmit={handleSendBroadcast} className="rounded-lg border border-gray-800 bg-[#161b22] p-5 sm:p-6 space-y-4">
+            <div>
+              <h2 className="text-base font-bold text-gray-200">Compose Broadcast Notification</h2>
+              <p className="text-xs text-gray-500">
+                Delivered directly to user in-app notification inboxes across web and Android devices.
+              </p>
+            </div>
+
+            {/* Notification Kind / Type Selector */}
+            <div>
+              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                Notification Category / Kind
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBroadcastType("feature_announcement");
+                    if (!broadcastLinkText || broadcastLinkText === "Download Update") {
+                      setBroadcastLinkText("Explore Feature");
+                    }
+                  }}
+                  className={cn(
+                    "flex flex-col items-start gap-1 p-3 rounded border text-left transition-all",
+                    broadcastType === "feature_announcement"
+                      ? "border-amber-500 bg-amber-500/10 text-amber-300 shadow-sm"
+                      : "border-gray-800 bg-[#0d1117] text-gray-400 hover:border-gray-700 hover:text-gray-200"
+                  )}
+                >
+                  <div className="flex items-center gap-1.5 font-bold text-xs">
+                    <Sparkles className="size-3.5 text-amber-400" />
+                    Feature Update
+                  </div>
+                  <span className="text-[10px] text-gray-500 leading-tight">
+                    Announce new features, improvements & tools
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBroadcastType("system_update");
+                    if (!broadcastLink && updateInfo?.downloadUrl) {
+                      setBroadcastLink(updateInfo.downloadUrl);
+                    }
+                    setBroadcastLinkText("Download Update");
+                  }}
+                  className={cn(
+                    "flex flex-col items-start gap-1 p-3 rounded border text-left transition-all",
+                    broadcastType === "system_update"
+                      ? "border-blue-500 bg-blue-500/10 text-blue-300 shadow-sm"
+                      : "border-gray-800 bg-[#0d1117] text-gray-400 hover:border-gray-700 hover:text-gray-200"
+                  )}
+                >
+                  <div className="flex items-center gap-1.5 font-bold text-xs">
+                    <Download className="size-3.5 text-blue-400" />
+                    App / System Update
+                  </div>
+                  <span className="text-[10px] text-gray-500 leading-tight">
+                    Notify users of new APK releases or OTA updates
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBroadcastType("general_announcement");
+                    if (!broadcastLinkText || broadcastLinkText === "Download Update") {
+                      setBroadcastLinkText("Read More");
+                    }
+                  }}
+                  className={cn(
+                    "flex flex-col items-start gap-1 p-3 rounded border text-left transition-all",
+                    broadcastType === "general_announcement" || broadcastType === "broadcast"
+                      ? "border-emerald-500 bg-emerald-500/10 text-emerald-300 shadow-sm"
+                      : "border-gray-800 bg-[#0d1117] text-gray-400 hover:border-gray-700 hover:text-gray-200"
+                  )}
+                >
+                  <div className="flex items-center gap-1.5 font-bold text-xs">
+                    <Megaphone className="size-3.5 text-emerald-400" />
+                    Announcement
+                  </div>
+                  <span className="text-[10px] text-gray-500 leading-tight">
+                    Service alerts, general notices & maintenance
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
                 Notification Title
               </label>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. SplitSlip v1.1 is Live!"
+                placeholder="e.g. SplitSlip v1.1.1 is Live with Gemini AI OCR!"
                 className="h-10 w-full rounded border border-gray-700 bg-[#0d1117] px-3 text-sm text-gray-200 outline-none placeholder:text-gray-600 focus:border-emerald-500/50"
               />
             </div>
 
-            <div className="mb-4">
-              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-gray-500">
-                Message
+            <div>
+              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                Message Body
               </label>
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={4}
-                placeholder="The notification message shown to all users…"
+                placeholder="The notification message shown to all users. Supports multiline notes..."
                 className="w-full rounded border border-gray-700 bg-[#0d1117] px-3 py-2 text-sm text-gray-200 outline-none placeholder:text-gray-600 focus:border-emerald-500/50 resize-y"
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <p className="text-[10px] text-gray-600">
-                Delivered directly to user in-app notification inboxes.
+            {/* Optional Action Link & Button Text */}
+            <div className="rounded border border-gray-800 bg-[#0d1117]/60 p-3.5 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                  Attached Action Link (Optional)
+                </span>
+                <span className="text-[10px] text-gray-500">Tapping notification opens this link</span>
+              </div>
+
+              <div>
+                <input
+                  value={broadcastLink}
+                  onChange={(e) => setBroadcastLink(e.target.value)}
+                  placeholder="https://... or /home or /contact"
+                  className="h-9 w-full rounded border border-gray-700 bg-[#0d1117] px-3 text-xs text-gray-200 outline-none placeholder:text-gray-600 focus:border-emerald-500/50 font-mono"
+                />
+              </div>
+
+              {/* Quick Presets */}
+              <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+                <span className="text-[10px] text-gray-500 mr-1">Quick Presets:</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBroadcastLink(updateInfo?.downloadUrl || "https://frugal-hornet-670.convex.site/download/apk");
+                    setBroadcastLinkText("Download APK (v" + (updateInfo?.latestVersion || "1.1.1") + ")");
+                    setBroadcastType("system_update");
+                  }}
+                  className="rounded bg-blue-500/10 border border-blue-500/30 px-2 py-0.5 text-[10px] font-medium text-blue-300 hover:bg-blue-500/20"
+                >
+                  Latest APK Download
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBroadcastLink("/contact");
+                    setBroadcastLinkText("Contact Support");
+                  }}
+                  className="rounded bg-gray-800 border border-gray-700 px-2 py-0.5 text-[10px] font-medium text-gray-300 hover:bg-gray-700"
+                >
+                  Contact Desk
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBroadcastLink("/home");
+                    setBroadcastLinkText("Start Splitting");
+                  }}
+                  className="rounded bg-gray-800 border border-gray-700 px-2 py-0.5 text-[10px] font-medium text-gray-300 hover:bg-gray-700"
+                >
+                  App Home
+                </button>
+                {broadcastLink && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBroadcastLink("");
+                      setBroadcastLinkText("");
+                    }}
+                    className="rounded text-gray-500 hover:text-gray-400 text-[10px] underline ml-1"
+                  >
+                    Clear link
+                  </button>
+                )}
+              </div>
+
+              <div>
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-gray-500">
+                  Button / Link Label
+                </label>
+                <input
+                  value={broadcastLinkText}
+                  onChange={(e) => setBroadcastLinkText(e.target.value)}
+                  placeholder="e.g. Download Now, Try It Out, View Details"
+                  className="h-9 w-full rounded border border-gray-700 bg-[#0d1117] px-3 text-xs text-gray-200 outline-none placeholder:text-gray-600 focus:border-emerald-500/50"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <p className="text-[10px] text-gray-500">
+                Delivered in real-time to all user devices.
               </p>
               <button
                 type="submit"
                 disabled={sending}
-                className="flex items-center gap-2 rounded bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-emerald-700 disabled:opacity-50"
+                className="flex items-center gap-2 rounded bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors shadow-sm"
               >
                 {sending ? (
-                  "Sending…"
+                  "Broadcasting…"
                 ) : (
                   <>
                     <Send className="size-3.5" />
-                    Broadcast
+                    Send Broadcast
                   </>
                 )}
               </button>
             </div>
           </form>
 
-          {lastResult && (
-            <div className="mt-4 flex items-center gap-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-4">
-              <Bell className="size-4 text-emerald-400" />
-              <p className="text-sm text-emerald-300">
-                Successfully sent to <span className="font-bold">{lastResult.sent}</span> users.
+          {/* Live Preview Side Box */}
+          <div className="space-y-4">
+            <div className="rounded-lg border border-gray-800 bg-[#161b22] p-5 sm:p-6">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block mb-2">
+                Live In-App Notification Preview
+              </span>
+              <p className="text-xs text-gray-500 mb-4">
+                This is how the notification card appears inside user notification inboxes:
               </p>
+
+              {/* Notification Card Preview */}
+              <div className="rounded-md border border-gray-700 bg-[#0d1117] p-3.5 flex items-start gap-3 shadow-md">
+                <span className="flex size-8 shrink-0 items-center justify-center rounded border border-gray-700 bg-[#161b22]">
+                  {broadcastType === "system_update" && <Download className="size-4 text-blue-400" />}
+                  {broadcastType === "feature_announcement" && <Sparkles className="size-4 text-amber-400" />}
+                  {(broadcastType === "general_announcement" || broadcastType === "broadcast") && <Megaphone className="size-4 text-emerald-400" />}
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <p className="text-xs font-bold text-gray-200 truncate">
+                        {title || "SplitSlip Announcement Title"}
+                      </p>
+                      {broadcastType === "system_update" && (
+                        <span className="shrink-0 rounded bg-blue-500/10 px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wider text-blue-400 border border-blue-500/20">
+                          Update
+                        </span>
+                      )}
+                      {broadcastType === "feature_announcement" && (
+                        <span className="shrink-0 rounded bg-amber-500/10 px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wider text-amber-400 border border-amber-500/20">
+                          New
+                        </span>
+                      )}
+                      {(broadcastType === "general_announcement" || broadcastType === "broadcast") && (
+                        <span className="shrink-0 rounded bg-emerald-500/10 px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wider text-emerald-400 border border-emerald-500/20">
+                          Notice
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[9px] uppercase tracking-wider text-gray-500 shrink-0">
+                      Just now
+                    </span>
+                  </div>
+
+                  <p className="mt-1.5 text-xs text-gray-400 leading-relaxed whitespace-pre-line">
+                    {message || "The notification message preview will update here as you type..."}
+                  </p>
+
+                  {broadcastLink && (
+                    <div className="mt-3 inline-flex items-center gap-1 rounded border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-400">
+                      <ExternalLink className="size-3" />
+                      <span>{broadcastLinkText || "View Details"}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
+
+            {lastResult && (
+              <div className="flex items-center gap-2.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-4">
+                <CheckCircle2 className="size-5 text-emerald-400 shrink-0" />
+                <div>
+                  <p className="text-xs font-bold text-emerald-300">Broadcast Sent Successfully</p>
+                  <p className="text-[11px] text-emerald-400/80">
+                    Delivered to <span className="font-bold">{lastResult.sent}</span> registered user inboxes.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 

@@ -5,7 +5,19 @@ import { Id } from "@/convex/_generated/dataModel";
 import { ScreenShell } from "@/app/components/Shell";
 import { TactileButton } from "@/app/components/paper";
 import { relativeDate } from "@/app/lib/money";
-import { Bell, CheckCheck, CreditCard, ShieldCheck, UserPlus, AlertCircle, Clock } from "lucide-react";
+import {
+  Bell,
+  CheckCheck,
+  CreditCard,
+  ShieldCheck,
+  UserPlus,
+  AlertCircle,
+  Clock,
+  ExternalLink,
+  Sparkles,
+  Download,
+  Megaphone,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function Notifications() {
@@ -18,6 +30,17 @@ export default function Notifications() {
   async function handleNotificationClick(n: any) {
     if (!n.isRead) {
       await markAsRead({ notificationId: n._id });
+    }
+
+    // Direct link attached to notification (e.g. from broadcast / announcement)
+    if (n.data?.link) {
+      const link = n.data.link.trim();
+      if (link.startsWith("http://") || link.startsWith("https://")) {
+        window.open(link, "_blank");
+      } else {
+        navigate(link);
+      }
+      return;
     }
 
     if (n.type === "payment_request" && n.data?.paymentRequestId) {
@@ -50,6 +73,13 @@ export default function Notifications() {
       case "connection_request":
       case "connection_accepted":
         return <UserPlus className="size-4 text-ink" />;
+      case "system_update":
+        return <Download className="size-4 text-blue-600" />;
+      case "feature_announcement":
+        return <Sparkles className="size-4 text-amber-600" />;
+      case "general_announcement":
+      case "broadcast":
+        return <Megaphone className="size-4 text-emerald-600" />;
       default:
         return <Bell className="size-4 text-ink-faint" />;
     }
@@ -99,18 +129,43 @@ export default function Notifications() {
 
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="font-receipt text-xs font-bold text-ink truncate">
-                    {n.title}
-                  </p>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <p className="font-receipt text-xs font-bold text-ink truncate">
+                      {n.title}
+                    </p>
+                    {n.type === "system_update" && (
+                      <span className="shrink-0 rounded bg-blue-500/10 px-1.5 py-0.5 font-receipt text-[8px] font-black uppercase tracking-wider text-blue-700 border border-blue-500/20">
+                        Update
+                      </span>
+                    )}
+                    {n.type === "feature_announcement" && (
+                      <span className="shrink-0 rounded bg-amber-500/10 px-1.5 py-0.5 font-receipt text-[8px] font-black uppercase tracking-wider text-amber-700 border border-amber-500/20">
+                        New
+                      </span>
+                    )}
+                    {(n.type === "general_announcement" || n.type === "broadcast") && (
+                      <span className="shrink-0 rounded bg-emerald-500/10 px-1.5 py-0.5 font-receipt text-[8px] font-black uppercase tracking-wider text-emerald-700 border border-emerald-500/20">
+                        Notice
+                      </span>
+                    )}
+                  </div>
                   <span className="font-receipt text-[9px] uppercase tracking-wider text-ink-faint shrink-0">
                     {relativeDate(n.createdAt)}
                   </span>
                 </div>
-                <p className="mt-1 font-receipt text-xs leading-relaxed text-ink-soft">
+                <p className="mt-1 font-receipt text-xs leading-relaxed text-ink-soft whitespace-pre-line">
                   {n.message}
                 </p>
 
-                {!n.isRead && (
+                {/* Direct Action link if broadcast with link */}
+                {n.data?.link && (
+                  <div className="mt-2.5 inline-flex items-center gap-1.5 rounded border border-stamp/40 bg-stamp/5 px-2.5 py-1 font-receipt text-[10px] font-bold text-stamp transition-colors hover:bg-stamp/15">
+                    <ExternalLink className="size-3" />
+                    <span>{n.data.linkText || "View Details"}</span>
+                  </div>
+                )}
+
+                {!n.isRead && !n.data?.link && (
                   <span className="mt-2 inline-block font-receipt text-[9px] font-semibold uppercase tracking-[0.2em] text-stamp">
                     ● Tap to view
                   </span>

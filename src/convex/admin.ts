@@ -377,6 +377,16 @@ export const broadcastNotification = mutation({
   args: {
     title: v.string(),
     message: v.string(),
+    notificationType: v.optional(
+      v.union(
+        v.literal("feature_announcement"),
+        v.literal("system_update"),
+        v.literal("general_announcement"),
+        v.literal("broadcast"),
+      ),
+    ),
+    link: v.optional(v.string()),
+    linkText: v.optional(v.string()),
     targetUserIds: v.optional(v.array(v.id("users"))),
   },
   handler: async (ctx, args) => {
@@ -394,13 +404,19 @@ export const broadcastNotification = mutation({
 
     const now = Date.now();
     let count = 0;
+    const resolvedType = args.notificationType || "general_announcement";
 
     for (const userId of targetIds) {
       await ctx.db.insert("notifications", {
         userId,
-        type: "connection_request" as const, // reuse existing type
-        title: args.title,
-        message: args.message,
+        type: resolvedType,
+        title: args.title.trim(),
+        message: args.message.trim(),
+        data: {
+          link: args.link?.trim() || undefined,
+          linkText: args.linkText?.trim() || undefined,
+          kind: resolvedType,
+        },
         isRead: false,
         createdAt: now,
       });
